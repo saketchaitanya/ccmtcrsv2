@@ -10,6 +10,8 @@
 		$centreData = $data['centreData']; 
 		$reminders = $data['reminders'];
 		$year = $data['forYear'];
+		$keys = $data['keys'];
+		
 	?>
 	<?php	if($model): ?>
 	<div class='table-responsive'>
@@ -37,7 +39,7 @@
 				</tr>
 			</thead>
 			<tbody>	
-				<?php foreach($model as $key=>$value): ?>
+				<?php  foreach ($keys as $key): ?>
 				<tr>
 					<td> <?= $centreData[$key]['fileNo'] ?> </td>
 					<td> <?= $centreData[$key]['CMCNo'] ?> </td>

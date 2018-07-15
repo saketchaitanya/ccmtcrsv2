@@ -423,6 +423,7 @@ class ReportQueryManager
 		$marksData  = array();
 		$marksTot   = array();
 		$centreData = array();
+		$quesCentres= array();
 		foreach($quesData as $ques)
 		{	
 			$centre = $centresAssoc[(int)$ques['centreID']];
@@ -431,17 +432,17 @@ class ReportQueryManager
 			$month = date_format(date_create('1-'.$ques['forMonth'],timezone_open('Asia/Kolkata')),'M');
 			$marksData[ $ques['centreID'] ][$month]=[ 'marks'=>$ques['marks'] ];	
 			$marksTot[ $ques['centreID'] ]['marks'][]=[ $ques['marks'] ];	
-								
-			$centreData[ $ques['centreID'] ]=
+			$quesCentres[]=$ques['centreID'];					
+			/*$centreData[ $ques['centreID'] ]=
 					[
 						'centreName'=>$centre->name,
 						'fileNo' =>$centre->fileNo,
 						'CMCNo'=>$centre->CMCNo,
 						'stateCode'=>$centre->stateCode,
-					];
+					];*/
 
 		}
-		$centrekeys = array_keys($centreData);
+		//$centrekeys = array_keys($centreData);
 		$reminders=array();
     	$yearObj = CurrentYear::findOne(['_id'=>$yearId]);
     	$stDateTS = strtotime($yearObj->yearStartDate);
@@ -481,11 +482,27 @@ class ReportQueryManager
 			}
 			$totalMarks[$key]=$total;
 		}
+
+		$remkeys=array_keys($remData);
+    	$keys = array_unique(array_merge($remkeys,$quesCentres));
+
+    	foreach ($keys as $key):
+			$centre = $centresAssoc[$key];
+        	$centreData[ $key ]=
+					[
+						'centreName'=>$centre->name,
+						'fileNo' =>$centre->fileNo,
+						'CMCNo'=>$centre->CMCNo,
+						'stateCode'=>$centre->stateCode,
+					];
+        endforeach;
+
 		return [	
 				'centreData'=>$centreData,
 				'marksData'=>$marksData,
 				'totalMarks'=>$totalMarks,
 				'reminders' =>$remData,
+				'keys'=>$keys,
 			];
 	}
 
@@ -496,6 +513,7 @@ public static function getPunctualityData($yearId)
 		$quesData = QueSummary::findAll(['yearID'=>$yearId]);
 		$centresAll = Centres::findAll(['status'=>Centres::STATUS_ACTIVE]);
 		$centresAssoc = ArrayHelper::index($centresAll,'wpLocCode');
+		$quesCentres = array();
 		$punctData  = array();
 		foreach($quesData as $ques)
 		{	
@@ -510,19 +528,11 @@ public static function getPunctualityData($yearId)
 			if(isset($punct))
 				$punct = ($punct==1)?'InTime':'Late';
 			$punctData[ $ques['centreID'] ][$month]=$punct;	
-			
-
-			$centreData[ $ques['centreID'] ]=
-					[
-						'centreName'=>$centre->name,
-						'fileNo' =>$centre->fileNo,
-						'CMCNo'=>$centre->CMCNo,
-						'stateCode'=>$centre->stateCode,
-					];
-
+			$quesCentres[]=$ques['centreID'];
 		}
+
 		
-		$centrekeys = array_keys($centreData);
+		//$centrekeys = array_keys($centreData);
 		$reminders=array();
     	$yearObj = CurrentYear::findOne(['_id'=>$yearId]);
     	$stDateTS = strtotime($yearObj->yearStartDate);
@@ -550,11 +560,25 @@ public static function getPunctualityData($yearId)
         	$remData[$key]=$remString;
         }
 
-		
+    	$remkeys=array_keys($remData);
+    	$keys = array_unique(array_merge($remkeys,$quesCentres));
+
+    	foreach ($keys as $key):
+			$centre = $centresAssoc[$key];
+        	$centreData[ $key ]=
+					[
+						'centreName'=>$centre->name,
+						'fileNo' =>$centre->fileNo,
+						'CMCNo'=>$centre->CMCNo,
+						'stateCode'=>$centre->stateCode,
+					];
+        endforeach;					
+
 		return [	
 				'centreData'=>$centreData,
 				'punctuality'=>$punctData,
 				'reminders' =>$remData,
+				'keys'=>$keys,
 			];
 	}
 	///---- private functions

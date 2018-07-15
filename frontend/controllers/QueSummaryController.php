@@ -46,7 +46,6 @@ class QueSummaryController extends \yii\web\Controller
     	endif;
     }
 
-/*------------------------------------*/
 
 /* ------------------- reports -------------------*/
 
@@ -196,6 +195,7 @@ class QueSummaryController extends \yii\web\Controller
                     'marksData'=>$data['marksData'],
                     'totalMarks'=>$data['totalMarks'],
                     'reminders'=>$data['reminders'],
+                    'keys'=>$data['keys'],
                     'forYear'=>$forYear,
                   ];
 
@@ -279,6 +279,7 @@ class QueSummaryController extends \yii\web\Controller
                     'centreData'=>$data['centreData'],
                     'punctuality'=>$data['punctuality'],
                     'reminders'=>$data['reminders'],
+                    'keys'=>$data['keys'],
                     'forYear'=>$forYear,
                   ];
 

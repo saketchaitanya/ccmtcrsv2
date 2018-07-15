@@ -11,6 +11,7 @@
 		$centreData = $data['centreData']; 
 		$reminders = $data['reminders'];
 		$year = $data['forYear'];
+		$keys = $data['keys'];
 	?>
 	<?php	if($model): ?>
 		<h4 class='text-center'>Central Chinmaya Mission Trust - Mumbai<br/>Details of Questionnaire Evaluation for Year: <?php echo $year ?></h4>
@@ -38,7 +39,7 @@
 				</tr>
 			</thead>
 			<tbody>	
-				<?php foreach($model as $key=>$value): ?>
+				<?php foreach($keys as $key): ?>
 				<tr>
 					<td> <?= $centreData[$key]['fileNo'] ?> </td>
 					<td> <?= $centreData[$key]['CMCNo'] ?> </td>
@@ -56,7 +57,7 @@
 					<td> <?= isset($model[$key]['Jan'])? $model[$key]['Jan']['marks']:''?> </td>
 					<td> <?= isset($model[$key]['Feb'])? $model[$key]['Feb']['marks']:''?> </td>
 					<td> <?= isset($model[$key]['Mar'])? $model[$key]['Mar']['marks']:''?> </td>
-					<td> <?= $totalMarks[$key] ?> </td>
+					<td> <?= isset($totalMarks[$key])?$totalMarks[$key]:'' ?></td>
 					<td> <?= $reminders[$key] ?> </td>
 
 				</tr>
