@@ -507,7 +507,9 @@ class ReportQueryManager
 	}
 
 /*  ----------------------------------  */
-
+/**
+ * used by punctuality statement
+ */
 public static function getPunctualityData($yearId)
 	{
 		$quesData = QueSummary::findAll(['yearID'=>$yearId]);

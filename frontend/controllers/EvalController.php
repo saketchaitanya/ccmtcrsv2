@@ -7,6 +7,8 @@ use Yii;
 use frontend\models\QueSections;
 use frontend\models\QueSectionsSearch;
 use frontend\models\QueStructure;
+use common\models\Centres;
+use frontend\models\CentreReminderLinker;
 use common\models\RegionMaster;
 use common\models\UserProfile;
 use common\models\WpAcharya;
@@ -91,7 +93,39 @@ class EvalController extends \yii\web\Controller
         return $this->render('region-head-listing',['model'=>$model]);
     }
 
+    public function actionCentreInfoListing()
+    {
+        $centres = Centres::find()->asArray()->all();
+        $linker = CentreReminderLinker::find()->asArray()->all();
+        $linkerMap= \yii\helpers\ArrayHelper::map($linker,'centreId','remUserArray');
+        $usersArr = array();
+        foreach($linkerMap as $key=>$value)
+        {
+            $users ='';
+                 for($i=0;$i<sizeof($value);$i++):
+                    $users=$users.$value[$i]['username'].'['.$value[$i]['email'].']';
+                    if($i<(sizeof($value)-1))
+                        $users = $users.', ';
+                 endfor;
+             $usersArr[$key]=$users;
+        }
+        $model=['centres'=>$centres, 'users'=>$usersArr];
+        return $this->render('centre-info-listing',['model'=>$model]);
+    }
   
-   
+   /**
+     * Displays a single Centres model.
+     * @param integer $_id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionViewCentre($code)
+    {
+       $model=  Centres::findOne(['wpLocCode'=>(int)$code]);
+
+        return $this->renderAjax('view-centres', [
+            'model' => $model
+        ]);
+    }
 
 }

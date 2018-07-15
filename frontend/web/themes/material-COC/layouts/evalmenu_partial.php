@@ -152,13 +152,17 @@
 
                             [
               			  		'label' => 'Utilities','items'=>
-	                      		[
+	                      		[  
+                                [ 
+                                    'label'=>'Centres', 'url'=>['/eval/centre-info-listing']
+                                ],
+                                  '<li class="divider"></li>',
 	                              [ 
-	                              		'label'=>'Acharyas', 'url'=>['/wp-acharya/index']
+	                              		'label'=>'Acharyas (chinmayamission.com)', 'url'=>['/wp-acharya/index']
 	                          		],
 	                              	'<li class="divider"></li>',
                               	[ 
-                              		'label'=>'Locations', 'url'=>['/wp-location/index']
+                              		'label'=>'Locations (chinmayamission.com)', 'url'=>['/wp-location/index']
                               	],
                                 '<li class="divider"></li>',
                                 [ 
