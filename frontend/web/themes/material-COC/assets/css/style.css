@@ -1,0 +1,222 @@
+	/**
+	 * CSS applies to the guest login 
+	 * CSS relies mainly on materializecss framework
+	 * Please donot add boostrap classes as there is a chance of overlap wiht materialize.
+	 * @author: Br. Saket Chaitanya;
+	 * @Ver: 1.0;
+	 * @Update Date: 24-12-2017;
+	*/
+	html, body {
+	  width: 100%;
+	}
+
+	html {
+	  background: url(../images/where-we-are.jpg) no-repeat fixed top center #1b1919;
+	  background-size:100%;
+
+	}
+
+
+  /* Parallax base styles
+  --------------------------------------------- */
+
+ .parallax {
+    height: 700px; /* fallback for older browsers */
+    height: 70vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-perspective: 700px;
+    perspective: 700px;
+  }
+
+  .parallax__group {
+    position: relative;
+    height: 500px; /* fallback for older browsers */
+    height: 50vh;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+
+  .parallax__layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .parallax__layer--fore {
+    -webkit-transform: translateZ(90px) scale(.7);
+    transform: translateZ(90px) scale(.7);
+    z-index: 1;
+  }
+
+  .parallax__layer--base {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    z-index: 4;
+  }
+
+  .parallax__layer--back {
+    -webkit-transform: translateZ(-300px) scale(2);
+    transform: translateZ(-300px) scale(2);
+    z-index: 3;
+  }
+
+  .parallax__layer--deep {
+    -webkit-transform: translateZ(-600px) scale(3);
+    transform: translateZ(-600px) scale(3);
+    z-index: 2;
+  }
+
+ /* style the groups
+  --------------------------------------------- */
+
+  #group1 {
+    z-index: 5; /* slide over group 2 */
+    opacity: 0.9;
+    
+  }
+  #group1 .parallax__layer--base {
+    /*background: rgb(102,204,102); */
+  }
+
+  #group2 {
+    z-index: 3; /* slide under groups 1 and 3 */
+  }
+  #group2 .parallax__layer--back {
+    background: rgb(123,210,102);
+  }
+
+  #group3 {
+    z-index: 4; /* slide over group 2 and 4 */
+  }
+  #group3 .parallax__layer--base {
+    background: rgb(153,216,101);
+  }
+
+  #group4 {
+    z-index: 2; /* slide under group 3 and 5 */
+
+  }
+  #group4 .parallax__layer--deep {
+    background: rgb(184,223,101);
+  }
+
+  #group5 {
+    z-index: 3; /* slide over group 4 and 6 */
+  }
+  #group5 .parallax__layer--base {
+    background: rgb(214,229,100);
+  }
+
+  #group6 {
+    z-index: 2; /* slide under group 5 and 7 */
+  }
+  #group6 .parallax__layer--back {
+    background: rgb(245,235,100);
+  }
+
+  #group7 {
+    z-index: 3; /* slide over group 7 */
+  }
+  #group7 .parallax__layer--base {
+    background: rgb(255,241,100);
+  }
+
+/*  style the divs within groups
+	---------------------------*/
+	#group1div{
+	 	top:-30vh; 
+	 	z-index:200
+	}
+
+	#group1subdiv1{
+		background:white;border-bottom:2px blue solid;
+	}
+
+	#group2div{
+		height:50vh;
+		background: #00356B !important; 
+		opacity: 0.8
+	}
+
+	#group4div{
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#004799+0,549dce+61,3df8ff+92 */
+		background: rgb(0,71,153); /* Old browsers */
+		background: -moz-linear-gradient(top,  rgb(0,71,153) 0%, rgb(84,157,206) 61%, rgb(61,248,255) 92%); /* FF3.6-15 */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(0,71,153)), color-stop(61%,rgb(84,157,206)), color-stop(92%,rgb(61,248,255))); /* Chrome4-9,Safari4-5 */
+		background: -webkit-linear-gradient(top,  rgb(0,71,153) 0%,rgb(84,157,206) 61%,rgb(61,248,255) 92%); /* Chrome10-25,Safari5.1-6 */
+		background: -o-linear-gradient(top,  rgb(0,71,153) 0%,rgb(84,157,206) 61%,rgb(61,248,255) 92%); /* Opera 11.10-11.50 */
+		background: -ms-linear-gradient(top,  rgb(0,71,153) 0%,rgb(84,157,206) 61%,rgb(61,248,255) 92%); /* IE10 preview */
+		background: linear-gradient(to bottom,  rgb(0,71,153) 0%,rgb(84,157,206) 61%,rgb(61,248,255) 92%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#004799', endColorstr='#3df8ff',GradientType=0 ); /* IE6-9 */
+		height:100vh;/*background:#1b226b;*/ 
+		opacity: 0.3;
+	}
+	#group4subdiv1{
+		position:absolute; 
+		bottom:2em;
+		margin:auto;
+		width:100%;
+		text-align:center; 
+		margin:0 0 80px
+	}
+
+	#group4subdiv1 h1{
+	color:white;font-size:3.5vw
+	}
+
+/* hide groups when media is less than 500px */
+
+@media only screen and (max-width: 500px) {
+
+	#group4{
+		display:none;
+	}
+}
+
+
+/*-- other contents --*/
+
+.nav-wrapper{
+	
+	z-index:1000;
+	width:100%;
+	 background-color: rgb(2, 121, 201);
+}
+
+.carousel{
+	/*height of carousel reduced from 400 to 300 */
+	height:300px !important;
+}
+
+.footer{
+
+	position:fixed;
+	bottom:0px;	
+	z-index:1000;
+	width:100%;
+	 background-color: rgb(2, 121, 201);
+}
+.main-content {
+	border-color:rgb(2, 83, 137);
+	 background-color:#ffff; /*rgba(2, 83, 137,0.7) ;*/
+ 
+
+}
+
+.main-content p{
+	 color:black !important;
+}
+
+
+.main-content p.help-block{
+
+  color:red  !important;
+}
+
+.white-text
+{
+  color:white;
+}

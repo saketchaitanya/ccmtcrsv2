@@ -1,0 +1,50 @@
+<?php
+
+namespace common\components;
+
+/**
+ * These is a common small helper function library 
+ *
+ */
+
+ class CommonHelpers {
+
+ 	/**
+     * Collapse consecutive slashes in $pathInfo, for example converts `site///index` into `site/index`.
+     * @param string $pathInfo raw path info.
+     * @return string normalized path info.
+     */
+
+    static public function collapseSlashes($pathInfo)
+    {
+        return ltrim(preg_replace('#/{2,}#', '/', $pathInfo), '/');
+    }
+
+    /**
+     * Adds or removes trailing slashes from $pathInfo depending on $addSlash is true or false
+     * @param string $pathInfo raw path info.
+     * @param boolean $addSlash
+     * @return string normalized path info.
+     */
+
+	static public function normalizeUrl($pathInfo, $addSlash)
+    {
+        $pathInfo = self::collapseSlashes($pathInfo);
+        if (addTrail == true && substr($pathInfo, -1) !== '/') {
+            $pathInfo .= '/';
+        } elseif (addTrail == false && substr($pathInfo, -1) === '/') {
+            $pathInfo = rtrim($pathInfo, '/');
+        }
+        return $pathInfo;
+    }
+
+    static public function createRelativeUrl($pathInfo)
+    {
+    	$pathInfo = self::collapseSlashes($pathInfo);
+    	if(substr($pathInfo,1)==='/'):
+    	$pathInfo = ltrim($pathInfo,'/');
+    	endif;
+    	return $pathInfo;
+
+    }
+ }

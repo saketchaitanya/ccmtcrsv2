@@ -1,0 +1,158 @@
+<?php
+
+use yii\bootstrap\Html;
+use yii\widgets\DetailView;
+use yii\bootstrap\ActiveForm;
+use kartik\widgets\TouchSpin;
+use common\components\questionnaire\MarksCalculator;
+
+/* @var $this yii\web\View */
+/* @var $model frontend\models\GrpGeneral */
+    $session=\Yii::$app->session;
+    $session->open();
+        $sessCentreName= $session->get('questionnaire.centreName');
+        $sessQueYear= $session->get('questionnaire.forYear');
+        $sessCentreName = isset($sessCentreName)?ucwords(strtolower($sessCentreName)):'';
+        $sessQueYear= isset($sessQueYear)?' ('.$sessQueYear.') ':'';
+        $commonTitle = $sessCentreName.$sessQueYear;
+        $this->title = 'Group: '.$groupParams['desc']; 
+        ?>      
+        <div style='color:red'><?php
+            if ($session->hasFlash('notSaved')):
+                $sessionFlash= $session->getFlash('notSaved');
+            endif;
+            if ($session->hasFlash('updated')):
+                $sessionFlash = $session->getFlash('updated');
+            endif;
+            ?>
+        </div>
+        <?php 
+            $session->close(); 
+        ?>       
+
+<div class="grp-general-view">
+    <div class= 'panel panel-success'>
+        <div class='panel-heading'>
+            <div class= 'row'>
+                <div class='col-xs-12'>
+                    <h3 class='text-center'><?= Html::encode($commonTitle) ?></h3>
+                    <h4 class='text-center'><?= Html::encode($this->title) ?></h4>
+                </div>                
+            </div>
+        </div>
+        <div class='panel-body'>
+            <div class='panel panel-default'>
+                <div class='panel-body'>
+                    <div class="questionnaire-view">    
+                        <h4>C. LITERARY ACTIVITIES</h4>
+                        <h4>1. News Letters and Magazines</h4>
+                        <hr/>
+                        <div class= 'table-responsive'>
+                            <?= DetailView::widget([
+                                'model' => $model,
+                                'attributes' => 
+                                    [
+                                        [
+                                            'attribute'=>'haveNewsletter',
+                                            'label'=>'1.a) Do you have any Newsletter/Magazine published from your centre?',
+                                        ],
+                                       
+                                        [
+                                            'attribute'=>'name',
+                                            'label'=>'1.b.i) Name',
+                                        ],
+
+                                        [
+                                            'attribute'=>'pages',
+                                            'label'=>'1.b.ii) Pages',
+                                        ],
+                                        [
+
+                                            'attribute'=>'noOfCopies',
+                                            'label'=>'1.b.iii) Number of Copies',
+                                        ],
+
+                                        [
+                                            'attribute'=>'periodicity',
+                                            'label'=>'1.b.iv) Periodicity',
+                                        ],
+                                    ],
+                                ]); ?>
+                        </div>
+                    </div>
+                    <?php  $totalMarks = MarksCalculator::getTotalMarks($model->queId);  ?>
+                    <div class='row bg-primary'>
+                            <div class='col-xs-6  h4'> EVALUATION</div>
+                        <div class='col-xs-6' style='vertical-align:center'>
+                            <div class='label label-warning pull-right'>
+                            <h5>Total Marks granted till now:&nbsp;&nbsp;<span class='badge'> <?= $totalMarks; ?></span>
+                            </h5>
+                            </div>
+                        </div>      
+                    </div>
+                    <?php if(isset($sessionFlash)):
+                       echo  \yii\bootstrap\Alert::widget([
+                                'options' => ['class' => 'alert-warning'],
+                                'body' => $sessionFlash,
+                            ]);
+                        endif;
+                    ?>  
+                    <hr/>
+                    <?php $form = ActiveForm::begin(); ?>
+                    <div class='alert alert-info'>
+                        Evaluation Criteria Suggestion: <?= $groupParams['evalCriteria'] ?>
+                    </div>
+
+                    <?php 
+                        $periodicity = $model->periodicity;
+                        switch($periodicity)
+                        {
+                            case 'Monthly':
+                            $marks = 5;
+                            break;
+                            case 'Bi-monthly':
+                            $marks = 3;
+                            break; 
+                            case 'Quarterly':
+                            $marks = 2;
+                            break;
+                            case 'Half-yearly':
+                            $marks = 1;
+                            break;
+                            default:
+                            $marks = 0;
+                        } 
+                        $model->marks = $marks; ?>
+
+                    <?= $form->field($model, 'marks')
+                        ->widget(TouchSpin::classname(), [
+                        'options'=>['placeholder' => 'Enter marks'],
+                        'pluginOptions' => [
+                                'initVal'=>0,
+                                'min' => 0,
+                                'step'=> 1,
+                                'max' => $groupParams['maxMarks'],
+                            ],
+                        ])->label('Marks Given. [Maximum marks allowed:'.$groupParams["maxMarks"].']'); 
+                    ?>         
+                    <?= $form->field($model, 'comments')
+                    ->textArea([ 
+                        'rows'=>3,
+                        'placeHolder'=>true,
+                     ])
+                    ->label('Comments for reworking'); 
+                    ?>
+                    <?= $form->field($model, 'status')->textInput(['disabled'=>true])->label('Question Status') ?>
+
+                    <!--- toolbar -->
+                    <?php include(\Yii::getAlias('@frontend').'/views/toolbar.php') ?> 
+                    <!-- toolbar ends  -->  
+                    <?php ActiveForm::end(); ?>
+                    <!---render modal tracker -->
+                    <?= $this->render('//modal-tracker',['queId'=>$model->queId]); ?>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+

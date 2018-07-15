@@ -1,0 +1,27 @@
+{
+  "name": "bower-asset",
+  "homepage": "https://github.com/saketchaitanya/ccmtCRS",
+  "authors": [
+    "saketchaitanya <saket@chinmayamission.com>"
+  ],
+  "description": "'bower assets for yii2'",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-ui": "jqueryui#~1.12.1",
+    "bootstrap3-dialog": "1.34.9"
+  },
+  "resolutions": {
+    "bootstrap3-dialog": "1.34.9"
+  }
+}

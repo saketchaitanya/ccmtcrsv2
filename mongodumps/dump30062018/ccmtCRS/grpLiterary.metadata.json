@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"ccmtCRS.grpLiterary"},{"v":1,"key":{"queId":1},"name":"queIndex","ns":"ccmtCRS.grpLiterary"}]}

@@ -1,0 +1,50 @@
+<?php
+
+namespace frontend\models
+
+use yii\base\Model;
+
+class StructGroup extends Model
+{
+	
+	/**
+	 * @var object groupId
+	 */
+
+	 public $groupId;
+
+	 /**
+	 * @var integer groupSeqNo
+	 */
+
+	 public $groupSeqNo;
+
+	 /**
+	 * @var boolean include
+	 */	
+
+	 public $include;
+
+
+	 /**
+	 * @var string groupDesc
+	 */
+
+	 public groupDesc
+
+	 /**
+	 * @var number maxMarks
+	 */
+
+	 public maxMarks
+
+	 /**
+	 * @var string state
+	 */
+
+
+
+	 
+
+
+}
