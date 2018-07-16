@@ -30,10 +30,10 @@
                   endif;    
 
                   $items =   
-                        [ 
-                			[
-                				'label'=>'Dashboard','url'=>['/eval/dashboard?userId='.$id],
-                			],
+                          [ 
+                      			[
+                      				'label'=>'Dashboard','url'=>['/eval/dashboard?userId='.$id],
+                      			],
 
                           	[
                           		'label' => 'My Actions', 'items'=>
@@ -41,61 +41,73 @@
                               		[
                               			'label' => 'Edit Profile', 'url' => [$profilelink]
                               		],
-
-                              		'<li class="divider"></li>',
-                                  	[
-                                    	'label' => 'Add Centres', 'url' => ['centres-india/index']
-                                  	],
-
-                                  	'<li class="divider"></li>',
+                                	'<li class="divider"></li>',
                               		[
                               			'label' => 'Manage Users', 'items'=>
                               			[
                               				[
-      	                              			'label' => 'Approve Users', 'url' =>['/eval-auth/approve-user-list']
-      	                              		],
-      	                              		'<li class="divider"></li>',
-      	                              		[
-                          					   'label'=> 'List Users', 'url'=> ['/user-profile/existing-user-listing']
-              		  				      	]
+                              			     'label' => 'Approve Users', 'url' =>['/eval-auth/approve-user-list']
+  	                              		],
+  	                              		'<li class="divider"></li>',
+  	                              		[
+                    					           'label'=> 'List Users', 'url'=> ['/user-profile/existing-user-listing']
+        		  				      	        ]
                               			]
                               		],
-
                               		'<li class="divider"></li>',
                               		[
-                          				'label' => 'Manage Reminders', 'items'=>
- 									 	[
-                                       		[ 
-                                            'label'=>'Centre Delinquency', 'url' => ['/reminder-trans/delinquency']
-                                          ],
-                                          '<li class="divider"></li>',
-                                          [ 
-                                       			'label'=>'Create Reminder', 'url' => ['/reminder-trans/index']
-                                       		],
-                                         	'<li class="divider"></li>',
-                                       		[
-                                       			'label'=> 'Sent Reminders', 'url'=> ['/reminder-trans/sent-reminders']
-                       		  		 		]
-                              		  		
-                      				 	]
-                        			],
+                          				  'label' => 'Manage Reminders', 'items'=>
+   									 	              [
+                                         		[ 
+                                              'label'=>'Centre Delinquency', 'url' => ['/reminder-trans/delinquency']
+                                            ],
+                                            '<li class="divider"></li>',
+                                            [ 
+                                         			'label'=>'Create Reminder', 'url' => ['/reminder-trans/index']
+                                         		],
+                                           	'<li class="divider"></li>',
+                                         		[
+                                         			'label'=> 'Sent Reminders', 'url'=> ['/reminder-trans/sent-reminders']
+                       		  		 		        ]
+                        				 	  ],
+                                    'label' => 'Manage Reminders', 'items'=>
+                                    [
+                                            [ 
+                                              'label'=>'Centre Delinquency', 'url' => ['/reminder-trans/delinquency']
+                                            ],
+                                            '<li class="divider"></li>',
+                                            [ 
+                                              'label'=>'Create Reminder', 'url' => ['/reminder-trans/index']
+                                            ],
+                                            '<li class="divider"></li>',
+                                            [
+                                              'label'=> 'Sent Reminders', 'url'=> ['/reminder-trans/sent-reminders']
+                                            ]
+                                    ],
+                                    'label' => 'Manage External Data', 'items'=>
+                                    [
+                                            [ 
+                                              'label'=>'Centre Allocation', 'url' => ['/allocation-details/index']
+                                            ],
+                                    ]
+                        			     ],
                           		]
-                          	],
-                          
+                        	  ],
+
                           	[
                           		'label'=>'Questionnaires','items'=>
                           		[
-                              		[ 
-                              			'label'=>'Submitted', 'url' =>['/questionnaire/indexeval?status=submitted']
-                          			],
-                              		'<li class="divider"></li>',
-	                              	[   
-	                              		'label'=>'Approved', 'url' =>['/questionnaire/indexeval?status=approved']
-	                              	],
-	                              	'<li class="divider"></li>',
-	                              	[   
-	                              	'label'=>'Sent for Rework', 'url' =>['/questionnaire/indexeval?status=rework']
-	                              	],
+                            		[ 
+                            			'label'=>'Submitted', 'url' =>['/questionnaire/indexeval?status=submitted']
+                      			    ],
+                            		'<li class="divider"></li>',
+                              	[   
+                              		'label'=>'Approved', 'url' =>['/questionnaire/indexeval?status=approved']
+                              	],
+                              	'<li class="divider"></li>',
+                              	[   
+                              	'label'=>'Sent for Rework', 'url' =>['/questionnaire/indexeval?status=rework']
+                              	],
                             	]
                           	],
 
@@ -117,17 +129,17 @@
                                 	[ 
                                 		'label'=>'Sequence', 'items'=>
                                 		[
-	                                      [
-	                                      	'label'=>'Listing', 'url' =>['/que-sequence/index']
-	                                      ],
-	                                	  '<li class="divider"></li>',
-	                                      [
-	                                      	'label'=>'Latest Seq', 'url' =>['/que-sequence/view']
-	                                      ], 
+                                        [
+                                        	'label'=>'Listing', 'url' =>['/que-sequence/index']
+                                        ],
+                                  	  '<li class="divider"></li>',
+                                        [
+                                        	'label'=>'Latest Seq', 'url' =>['/que-sequence/view']
+                                        ], 
                                 		], 
                                 	],
                             	]
-                      		],
+                      		  ],
 
                           	[
                           		'label' => 'Evaluation', 'items'=>
@@ -151,63 +163,63 @@
                             ],
 
                             [
-              			  		'label' => 'Utilities','items'=>
-	                      		[  
-                                [ 
-                                    'label'=>'Centres', 'url'=>['/eval/centre-info-listing']
-                                ],
+              			  		    'label' => 'Utilities','items'=>
+  	                      		[  
+                                  [ 
+                                      'label'=>'Centres', 'url'=>['/eval/centre-info-listing']
+                                  ],
+                                    '<li class="divider"></li>',
+  	                              [ 
+  	                              		'label'=>'Acharyas (chinmayamission.com)', 'url'=>['/wp-acharya/index']
+  	                          		],
+  	                              	'<li class="divider"></li>',
+                                	[ 
+                                		'label'=>'Locations (chinmayamission.com)', 'url'=>['/wp-location/index']
+                                	],
                                   '<li class="divider"></li>',
-	                              [ 
-	                              		'label'=>'Acharyas (chinmayamission.com)', 'url'=>['/wp-acharya/index']
-	                          		],
-	                              	'<li class="divider"></li>',
-                              	[ 
-                              		'label'=>'Locations (chinmayamission.com)', 'url'=>['/wp-location/index']
-                              	],
-                                '<li class="divider"></li>',
-                                [ 
-                                  'label'=>'Regional Heads', 'url'=>['/eval/regionheadlisting']
-                                ],
-	                        	]
+                                  [ 
+                                    'label'=>'Regional Heads', 'url'=>['/eval/regionheadlisting']
+                                  ],
+  	                        	]
                           	],
 
                           	[
-                      			'label' => 'Reports', 'items'=>
-	                      		[
-                                [ 
-                                  'label'=>'Generate Report Data', 'url' =>['/que-summary/index']
-                                ],
-                                  '<li class="divider"></li>',
-                                [ 
-                                  'label'=>'Activities at a glance', 'url' =>['/que-summary/activitiesataglance']
-                                ],
-                                  '<li class="divider"></li>',
-	                          		[ 
-	                          			'label'=>'Monthwise Marksheet', 'url' =>['/que-summary/monthwisemarksheet']
-	                          		],
-                                '<li class="divider"></li>',
+                      			   'label' => 'Reports', 'items'=>
+  	                      		[
                                   [ 
-                                    'label'=>'Punctuality Statement', 'url'=> ['/que-summary/punctualitystatement']
+                                    'label'=>'Generate Report Data', 'url' =>['/que-summary/index']
                                   ],
-	                              	'<li class="divider"></li>',
-	                              	[ 
-	                              		'label'=>'Payment Summary', 'url'=> ['/eval/paymentsummary']
-	                              	],
-	                              	'<li class="divider"></li>',
-	                              	[ 
-	                              		'label'=>'Regionwise Payment', 'url'=> ['/eval/regionwisepayment']
-	                              	],
-	                              	'<li class="divider"></li>',
-	                              	[ 
-	                              		'label'=>'Min-Max till date', 'url'=> ['/eval/minmax']
-	                              	],
-	                              	'<li class="divider"></li>',
-	                              	[ 
-	                              		'label'=>'Min-max - 6months', 'url'=> ['/eval/minmaxsixmonths']
-	                              	],
-	                    		]
-                      		]
-                        ];
+                                    '<li class="divider"></li>',
+                                  [ 
+                                    'label'=>'Activities at a glance', 'url' =>['/que-summary/activitiesataglance']
+                                  ],
+                                    '<li class="divider"></li>',
+  	                          		[ 
+  	                          			'label'=>'Monthwise Marksheet', 'url' =>['/que-summary/monthwisemarksheet']
+  	                          		],
+                                    '<li class="divider"></li>',
+                                    [ 
+                                      'label'=>'Punctuality Statement', 'url'=> ['/que-summary/punctualitystatement']
+                                    ],
+  	                              	'<li class="divider"></li>',
+  	                              	[ 
+  	                              		'label'=>'Payment Summary', 'url'=> ['/eval/paymentsummary']
+  	                              	],
+  	                              	'<li class="divider"></li>',
+  	                              	[ 
+  	                              		'label'=>'Regionwise Payment', 'url'=> ['/eval/regionwisepayment']
+  	                              	],
+  	                              	'<li class="divider"></li>',
+  	                              	[ 
+  	                              		'label'=>'Min-Max till date', 'url'=> ['/eval/minmax']
+  	                              	],
+  	                              	'<li class="divider"></li>',
+  	                              	[ 
+  	                              		'label'=>'Min-max - 6months', 'url'=> ['/eval/minmaxsixmonths']
+  	                              	],
+  	                    		  ]
+                      		  ]
+                          ];
                                          
                         if (!Yii::$app->user->isGuest and (Yii::$app->user->identity->username !==null)):
                               $items[] = 

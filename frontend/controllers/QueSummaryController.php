@@ -118,10 +118,10 @@ class QueSummaryController extends \yii\web\Controller
       $yearId= $post['refYear'];
       $centreId= (int)$post['refCentre'];
     
-    $year = \common\models\CurrentYear::findOne(['_id'=>$yearId]);
-    $startDate = $year->yearStartDate;
-    $endDate = $year->yearEndDate;
-    $forYear = substr($startDate,-4).' - '.substr($endDate,-4);
+      $year = \common\models\CurrentYear::findOne(['_id'=>$yearId]);
+      $startDate = $year->yearStartDate;
+      $endDate = $year->yearEndDate;
+      $forYear = substr($startDate,-4).' - '.substr($endDate,-4);
     
     $summ = QueSummary::find()
         ->where(['yearID'=>$yearId,'centreID'=>$centreId])

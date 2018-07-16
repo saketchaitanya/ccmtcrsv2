@@ -86,4 +86,13 @@ class CurrentYear extends \yii\mongodb\ActiveRecord
         return static::findOne([ 'status' => self::STATUS_ACTIVE]);
 
     }
+    /**
+     *  Gets the current year string as startyear-endyear (e.g. 2018-2019)
+     */
+    public static function getYearString()
+    {
+        $currYear = self::getCurrentYear();
+        $yearString = substr($currYear->yearStartDate,-4).' - '.substr($currYear->yearEndDate,-4);
+        return $yearString;
+    }
 }
