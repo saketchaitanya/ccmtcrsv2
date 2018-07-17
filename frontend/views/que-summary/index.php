@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<div class="panel-heading">
 						Generate Questionnaire Summary
 					</div>
-					<div class="panel-body">
+					<div class="panel-body" style='min-height:200px'>
 					    <?php
 						$form = ActiveForm::begin(
 								[
@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				    			]);
 				    	?>
 				   	
-	  		 		<?php 
+	  		 			<?php 
 	  				 	echo Html::button(
 	  		 			'Generate Summary', 
 	  		 			[
@@ -42,15 +42,45 @@ $this->params['breadcrumbs'][] = $this->title;
 	  		 				'title' => 'Generating Summary', 
 	  		 				'class' => 'loadSummContent btn btn-success'
 	  		 			]); 
-	 				?>
-	 				<div><br/> Message will be displayed below </div>
-					<div id='summ-content'></div>
-				</div>
-   			</div>
+	 					?>
+	 					<div><br/> Message will be displayed below <br/> </div>
+						<div id='summ-content'></div>
+						<?php ActiveForm::end(); ?>
+					</div>
+   				</div>
 	   		</div>
    			<div class='col-xs-12 col-md-6'>
+   				<div class="panel panel-success">
+					<div class="panel-heading">
+						Generate Allocations
+					</div>
+					<div class="panel-body" style='min-height:200px'>
+					    <?php
+						$form = ActiveForm::begin(
+								[
+				                	'options' => 
+				                	[
+				                    	'id' => 'allocation-form'
+				                	]
+				    			]);
+				    	?>
+				   	
+	  		 			<?php 
+	  				 	echo Html::button(
+	  		 			'Generate Allocations', 
+	  		 			[
+	  		 				'value' => Url::to(['allocation-details/generate-allocations']), 
+	  		 				'title' => 'Generating Allocations', 
+	  		 				'class' => 'loadAllocContent btn btn-success'
+	  		 			]); 
+	 					?>
+	 					<div><br/> Message will be displayed below<br/> </div>
+						<div id='alloc-content'></div>
+						<?php ActiveForm::end(); ?>
+					</div>
+   				</div>
    			</div>
-	<?php ActiveForm::end(); ?>
+	
 </div>
 
 
@@ -67,6 +97,18 @@ $this->params['breadcrumbs'][] = $this->title;
 				});",
 		\yii\web\View::POS_END,
 		'summ-handler'
+	);
+
+	$this->registerJs(
+		"$(function()
+				{
+					$(document).on('click', '.loadAllocContent', function()
+					{
+			            $('#alloc-content').load($(this).attr('value'));
+			    	});
+				});",
+		\yii\web\View::POS_END,
+		'alloc-handler'
 	);
 	?>
 	<?php /*echo

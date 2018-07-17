@@ -12,7 +12,11 @@ use kartik\widgets\DatePicker;
     /* @var $this yii\web\View */
     /* @var $model frontend\models\AllocationDetails */
     /* @var $form yii\widgets\ActiveForm */
-
+    $this->title = 'Allocations';
+    $this->params['breadcrumbs'][] = ['label' => 'Allocation Details', 'url' => ['index']];
+    $this->params['breadcrumbs'][] = $this->title;
+ 
+ 
     $centrelist = AllocationDetails::getExtCentres();
     $region = RegionMaster::findAll(['status'=>[RegionMaster::STATUS_ACTIVE,RegionMaster::STATUS_LOCKED]]); 
     $regmap = \yii\helpers\ArrayHelper::map($region,'regionCode','name');
@@ -88,7 +92,7 @@ use kartik\widgets\DatePicker;
             <?php else: ?>
               <?= $form->field($model, 'allocation')->textInput(['readOnly'=>true]) ?> 
             <?php endif; ?> 
-
+                        
             <?= $form->field($model, 'paymentDate')->widget(DatePicker::class, 
                 [
                     'options' => 
@@ -107,7 +111,6 @@ use kartik\widgets\DatePicker;
             <?= $form->field($model, 'remarks') ?>
             <div class="form-group">
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-                
                 <?php if($model->status !== AllocationDetails::STATUS_APPROVED): ?>
                 <?= Html::a('Approve', 
                     ['approveallocation', 'id' => (string)$model->_id], 
@@ -118,8 +121,8 @@ use kartik\widgets\DatePicker;
                             'confirm' => 'Once You approve, you cannot change or delete allocation. Do you want to proceed?',
                         ]
                     ])
-                ?> 
-                <?php endif; ?>   
+                ?>
+                <?php endif; ?>       
             </div>
 
             <?php ActiveForm::end(); ?>

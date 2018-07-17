@@ -15,12 +15,24 @@ use common\models\WpAcharya;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\mongodb\Query;
 
 
 
 class EvalController extends \yii\web\Controller
 {
 
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
     /*public function behaviors()
     {
         return 
@@ -128,4 +140,5 @@ class EvalController extends \yii\web\Controller
         ]);
     }
 
+    
 }

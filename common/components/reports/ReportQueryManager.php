@@ -14,7 +14,7 @@ use common\components\CentresIndiaHelper;
 class ReportQueryManager
 {
 	/**
-	 * This gives the details of questionnaires for a centre for the current year.
+	 * This gives the details of questionnaires for a centre /all centres for the current year.
 	 *  which have been submitted, approved or closed
 	 *  @param MongoId $centreId
 	 */
