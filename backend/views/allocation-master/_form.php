@@ -5,10 +5,14 @@ use yii\widgets\ActiveForm;
 use unclead\multipleinput\MultipleInput;
 use kartik\widgets\TouchSpin;
 use kartik\widgets\DatePicker;
+use kartik\widgets\Select2;
+use common\components\AcharyaHelper;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\AllocationMaster */
 /* @var $form yii\widgets\ActiveForm */
+
+$acharyaList = AcharyaHelper::allAcharyaSelect2Input();
 ?>
 
 <div class="allocation-master-form">
@@ -27,10 +31,30 @@ use kartik\widgets\DatePicker;
 					]
 	]);
 	?>
-
+	<?php echo $form->field($model, 'approvalDate')->widget(DatePicker::classname(), 
+	[
+		'options' => 
+			[
+				'placeholder' => 'Enter date on which approval was recieved ...'],
+				'pluginOptions' => 
+					[
+						'autoclose' => true,
+						'format' => 'dd-M-yyyy',
+					]
+	]);
+	?>
+	<?php echo $form->field($model, 'approvedBy')->widget(Select2::class, 
+                [
+                    'data' => $acharyaList,
+                    'options' => ['placeholder' => 'Select approving acharya name...'],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                ],
+            ]);
+	?>
    <!--  <?= $form->field($model, 'status') ?> -->
 
-   
+   <div class='well'>
 	<?= $form->field($model, 'rangeArray')->widget(MultipleInput::className(),[
 			'max'=>20,
 			'columns'=>[
@@ -48,7 +72,8 @@ use kartik\widgets\DatePicker;
 								        'step' => 1,								       
 								        'boostat' => 5,
 								        'maxboostedstep' => 10,
-							        ]
+							        ],
+							    'class'=>'text-right'
 							    ],
 						],
 						[
@@ -65,7 +90,8 @@ use kartik\widgets\DatePicker;
 								        'step' => 1,								       
 								        'boostat' => 5,
 								        'maxboostedstep' => 10,
-							        ]
+							        ],
+							    'class'=>'text-right'
 							    ],
 						],
 						[
@@ -82,7 +108,8 @@ use kartik\widgets\DatePicker;
 								        'step' => 100,								       
 								        'boostat' => 5,
 								        'maxboostedstep' => 10,
-							        ]
+							        ],
+						        'class'=>'text-right'
 							    ],
 						],
 
@@ -101,15 +128,16 @@ use kartik\widgets\DatePicker;
 								        'boostat' => 100,
 								        'maxboostedstep' => 1000,
 								        'prefix'=>'₹',
-							        ]
+							        ],
+							    'class'=>'text-right'
 							    ],
 						],
 
 					],
 
-			]); 
+			])->label('Amount Allocations'); 
 	?>
-
+	</div>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

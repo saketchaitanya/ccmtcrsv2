@@ -12,6 +12,7 @@ use frontend\models\CentreReminderLinker;
 use common\models\RegionMaster;
 use common\models\UserProfile;
 use common\models\WpAcharya;
+use common\models\AllocationMaster;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -140,5 +141,36 @@ class EvalController extends \yii\web\Controller
         ]);
     }
 
+
+    public function actionViewAllocationMaster()
+    {
+
+        $model = AllocationMaster::findOne(['status'=>AllocationMaster::STATUS_ACTIVE]);
+        if($model)
+        {
+            return $this->render('view-allocation-master',['model'=>$model]);
+        }
+        else
+        {
+            throw new \yii\web\ServerErrorHttpException('No active Allocation Information found');
+        }
+
+    }
+
+    public function actionPdfAllocationMaster()
+    {
+
+        $model = AllocationMaster::findOne(['status'=>AllocationMaster::STATUS_ACTIVE]);
+        if($model)
+        {
+            $content = $this->renderPartial('pdf-allocation-master',['model'=>$model]);
+              return $pdf = Yii::$app->pdf->generatePdf($content);
+        }
+        else
+        {
+            throw new \yii\web\ServerErrorHttpException('No active Allocation Information found');
+        }
+
+    }
     
 }

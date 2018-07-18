@@ -422,7 +422,7 @@ class ReportQueryManager
 		$centresAssoc = ArrayHelper::index($centresAll,'wpLocCode');
 		$marksData  = array();
 		$marksTot   = array();
-		$centreData = array();
+		
 		$quesCentres= array();
 		foreach($quesData as $ques)
 		{	
@@ -433,28 +433,21 @@ class ReportQueryManager
 			$marksData[ $ques['centreID'] ][$month]=[ 'marks'=>$ques['marks'] ];	
 			$marksTot[ $ques['centreID'] ]['marks'][]=[ $ques['marks'] ];	
 			$quesCentres[]=$ques['centreID'];					
-			/*$centreData[ $ques['centreID'] ]=
-					[
-						'centreName'=>$centre->name,
-						'fileNo' =>$centre->fileNo,
-						'CMCNo'=>$centre->CMCNo,
-						'stateCode'=>$centre->stateCode,
-					];*/
-
 		}
-		//$centrekeys = array_keys($centreData);
+
 		$reminders=array();
     	$yearObj = CurrentYear::findOne(['_id'=>$yearId]);
     	$stDateTS = strtotime($yearObj->yearStartDate);
     	$endDateTS = strtotime($yearObj->yearEndDate);
     	$cutoffDateTS=strtotime($yearObj->cutoffDate);
 
+
+    	//reminder data 
         $q = new Query;
       		$rows =   $q->select(['centreId','reminderArray','_id'=>false])
                 ->from('centreReminderLinker')
                 ->all();
         $reminders=ArrayHelper::map($rows,'centreId','reminderArray');
-         // \yii::$app->yiidump->dump($reminders);
      	$remData = array();
         foreach ($reminders as $key=>$value)
         { 
@@ -482,10 +475,13 @@ class ReportQueryManager
 			}
 			$totalMarks[$key]=$total;
 		}
+		
 
 		$remkeys=array_keys($remData);
     	$keys = array_unique(array_merge($remkeys,$quesCentres));
 
+    	//centre data for all centres
+    	$centreData = array(); 
     	foreach ($keys as $key):
 			$centre = $centresAssoc[$key];
         	$centreData[ $key ]=
@@ -494,6 +490,8 @@ class ReportQueryManager
 						'fileNo' =>$centre->fileNo,
 						'CMCNo'=>$centre->CMCNo,
 						'stateCode'=>$centre->stateCode,
+						'region'=>$centre->region,
+						'code'=>$centre->code,
 					];
         endforeach;
 
@@ -695,7 +693,7 @@ public static function getPunctualityData($yearId)
 	/**
 	 * For getting values for a current Year 
 	 */
-	private static function currentYear()
+	public static function currentYear()
 	{
 		$currentYear = \common\models\CurrentYear::getCurrentYear();
 		$startDate = $currentYear->yearStartDate;

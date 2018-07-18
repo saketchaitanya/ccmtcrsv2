@@ -1,6 +1,9 @@
 <?php
 
 namespace common\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use common\components\behaviors\UnameBlameableBehavior;
 
 use Yii;
 
@@ -37,19 +40,37 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
             '_id',
             'rangeArray',
             'activeDate',
+            'approvedBy',
+            'approvalDate',
             'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+            'created_uname',
+            'updated_uname',
         ];
     }
 
+    public function behaviors()
+    {
+        return [
+                 TimestampBehavior::class,
+                 BlameableBehavior::class,
+                 UnameBlameableBehavior::class,
+            ];
+    }
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['rangeArray', 'activeDate'], 'required'],
+
+            [['rangeArray', 'activeDate','approvedBy'], 'required'],
             ['status','in','range'=> [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
             ['status','default','value'=>self::STATUS_INACTIVE],
+            ['approvalDate','date','format'=>'php:d-m-Y'],
         ];
     }
 
@@ -58,10 +79,13 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+        return 
+        [
             '_id' => 'ID',
             'rangeArray'=>'Range Array',
             'activeDate' => 'Active Date',
+            'approvedBy' => 'Approved By',
+            'approvalDate' => 'Approval Date',
             'status' => 'Status',
         ];
     }

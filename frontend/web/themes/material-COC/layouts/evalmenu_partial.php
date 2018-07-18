@@ -149,7 +149,7 @@
 	                              	],  
 	                              	'<li class="divider"></li>',                               
 	                              	[ 
-	                              		'label'=>'Rates', 'url'=> ['/eval/rates']
+	                              		'label'=>'Rates', 'url'=> ['/eval/view-allocation-master']
 	                              	],
 	                              	'<li class="divider"></li>',
 	                              	[ 

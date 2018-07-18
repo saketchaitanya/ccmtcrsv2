@@ -21,6 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             '_id',            
             'activeDate',
+            'approvedBy',
+            'approvalDate',
             'status',
         ],
     ]); 
@@ -32,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php  if ($model->status==AllocationMaster::STATUS_ACTIVE) { ?>
     <p>
         <?= Html::a('Update', ['update', 'id' => (string)$model->_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('PDF', ['view-pdf', 'id' => (string)$model->_id], ['class' => 'btn btn-warning']) ?>
+        <?= Html::a('PDF', ['view-pdf', 'id' => (string)$model->_id], ['class' => 'btn btn-warning','target'=>'_blank']) ?>
     </p> 
     <?php } ?>
     

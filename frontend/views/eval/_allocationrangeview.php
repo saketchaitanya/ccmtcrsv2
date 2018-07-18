@@ -7,7 +7,7 @@
         ArrayHelper::multisort($range, ['srNo', 'startMarks'], [SORT_ASC, SORT_ASC]);
       
     ?>
-   <div class ='panel panel-primary'>
+   <div class ='panel panel-default'>
         <div class = 'panel-heading'>
             Rates for All Ranges
         </div>

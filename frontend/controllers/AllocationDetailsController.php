@@ -92,9 +92,9 @@ class AllocationDetailsController extends Controller
          $res = AllocationManager::updateCurrentAllocations();
         if (\Yii::$app->request->isAjax):
             if($res):
-                $message = true;
+                $message = 'Allocations has been successfully inserted.';
             else:
-                $message = false;
+                $message = 'Something went wrong with updates. Please confirm whether the data has not been updated for the year before';
             endif;
               $response = Yii::$app->response;
            // $response->format = \yii\web\Response::FORMAT_JSON; -- only used if text out put is reqd
