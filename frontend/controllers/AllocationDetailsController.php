@@ -8,9 +8,12 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\mongodb\Query;
 use common\models\WpLocation;
 use common\models\CurrentYear;
+use common\models\Centres;
 use common\components\reports\AllocationManager;
+use common\components\reports\ReportQueryManager;
 /**
  * AllocationDetailsController implements the CRUD actions for AllocationDetails model.
  */
@@ -78,6 +81,7 @@ class AllocationDetailsController extends Controller
             $model->yearId =(string) $year->_id;
             $yearstring =substr($year->yearStartDate,-4).substr($year->yearEndDate,-4);
             $model->allocationID = $model->wpLocCode.$yearstring;
+            $model->status = AllocationDetails::ALLOC_EXT;
             $model->save();
             return $this->redirect(['view', 'id' => (string)$model->_id]);
         }
@@ -87,22 +91,74 @@ class AllocationDetailsController extends Controller
         ]);
     }
 
+    
+
+    /**
+     * Updates an existing AllocationDetails model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $_id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => (string)$model->_id]);
+        }
+
+        return $this->render('update', [
+        'model' => $model,
+        ]);
+    }
+
+     /**
+     * Deletes an existing AllocationDetails model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $_id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionMarkdelete($id)
+    {
+        $model= $this->findModel($id);
+
+        if(($model->status) == AllocationDetails::STATUS_NEW):
+            $model->delete();
+            \yii::$app->session->setFlash('deleteStatus', 'The record has been deleted');
+        else:
+            \yii::$app->session->setFlash('deleteStatus', 'This record cannot be deleted as allocation is approved');
+        endif;
+
+        return $this->redirect(['index']);
+    }
+
     public function actionGenerateAllocations()
     {
-         $res = AllocationManager::updateCurrentAllocations();
-        if (\Yii::$app->request->isAjax):
-            if($res):
-                $message = 'Allocations has been successfully inserted.';
+        //first run the summary once..
+         $res=ReportQueryManager::updateQuesSummary();
+
+         if($res):
+            $res1 = AllocationManager::updateCurrentAllocations();
+            
+            if (\Yii::$app->request->isAjax):
+                if($res1):
+                    $message = 'Allocations has been successfully inserted.';
+                else:
+                    $message = 'Something went wrong with updates. Please confirm whether the data has not been updated for the year before';
+                endif;
+                $response = Yii::$app->response;
+                 // $response->format = \yii\web\Response::FORMAT_JSON; -- only used if text out put is reqd
+                $response->data = $message;
+                $response->statusCode = 200;
+                return $this->renderPartial('alloc-sum-status',['response'=>$response]);
             else:
-                $message = 'Something went wrong with updates. Please confirm whether the data has not been updated for the year before';
+                throw new \yii\web\BadRequestHttpException;
             endif;
-              $response = Yii::$app->response;
-           // $response->format = \yii\web\Response::FORMAT_JSON; -- only used if text out put is reqd
-          $response->data = $message;
-          $response->statusCode = 200;
-         return $this->renderPartial('alloc-sum-status',['response'=>$response]);
+
         else:
-            throw new \yii\web\BadRequestHttpException;
+                throw new \yii\web\ServerErrorHttpException('The summary creation was unsuccessful. Hence no allocations generated');
         endif;
     }
     /**
@@ -131,48 +187,6 @@ class AllocationDetailsController extends Controller
             'model' => $model,
         ]);
     }
-
-    /**
-     * Updates an existing AllocationDetails model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $_id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => (string)$model->_id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-     /**
-     * Deletes an existing AllocationDetails model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $_id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionMarkdelete($id)
-    {
-        $model= $this->findModel($id);
-
-        if(($model->status) == AllocationDetails::STATUS_NEW):
-            $model->delete();
-            \yii::$app->session->setFlash('deleteStatus', 'The record has been deleted');
-        else:
-            \yii::$app->session->setFlash('deleteStatus', 'This record cannot be deleted as allocation is approved');
-        endif;
-
-        return $this->redirect(['index']);
-    }
-
     public function actionApproveallocation($id)
     {
         $model= $this->findModel($id);
@@ -194,6 +208,25 @@ class AllocationDetailsController extends Controller
 
         return $this->redirect(['index']);
     }*/
+
+    public function actionUpdateCentreAllocations()
+    {
+        $currYear = CurrentYear::getCurrentYear();
+        $data = ReportQueryManager::getMonthwiseMarksData((string)$currYear->_id);
+        $centreData = $data['centreData'];
+        $centreIds = array_keys($centreData);
+        $allocArray = array();
+        foreach ($centreIds as $id):
+        $alloc=AllocationDetails::find()
+            ->where(['yearId' =>(string)$currYear->_id])
+            ->andWhere(['wpLocCode' =>(int)$id])
+            ->one();
+            /*$name = Centres::getCentreName($id);*/
+            $allocArray[$id]=$alloc;
+        endforeach;
+        
+        return $this->render('centre-allocation-update',['model'=>$allocArray]);
+    }
 
     /**
      * Finds the AllocationDetails model based on its primary key value.

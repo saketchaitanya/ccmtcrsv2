@@ -20,61 +20,67 @@ $this->params['breadcrumbs'][] = $this->title;
         
 ?></div>
 <div class="allocation-details-index">
-    <h1><?= Html::encode($this->title) ?></h1>
-    
-    <?php Pjax::begin(); ?>
-    <p>
-        <?= Html::a('Create Allocation Details', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <?php 
-        if(isset($sessionFlash)):
-         echo  \yii\bootstrap\Alert::widget([
-                'options' => ['class' => 'alert-warning'],
-                'body' => $sessionFlash,
-            ]);
-        endif;
-    ?>
-    <?= GridView::widget(
-        [
-            'dataProvider' => $dataProvider,
-            'columns' => 
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h2><?= Html::encode($this->title) ?></h2>
+        </div>
+        <div class='panel-body'>
+        <?php Pjax::begin(); ?>
+        <p>
+            <?= Html::a('Create Allocation', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+        <?php 
+            if(isset($sessionFlash)):
+             echo  \yii\bootstrap\Alert::widget([
+                    'options' => ['class' => 'alert-warning'],
+                    'body' => $sessionFlash,
+                ]);
+            endif;
+        ?>
+        <?= GridView::widget(
             [
-                ['class' => 'yii\grid\SerialColumn'],
-
-                '_id',
-                'name',
-                'wpLocCode',
-                'region',
-                'stateCode',
-                //'code',
-                //'CMCNo',
-                //'fileNo',
-                //'yearId',
-                //'marks',
-                //'allocation',
-                //'paymentDate',
-                //'Remarks',
+                'dataProvider' => $dataProvider,
+                'columns' => 
                 [
-                    'class' => 'yii\grid\ActionColumn',
-                    'header' => 'Actions',
-                    'template'=>'{view}{update}{delete}',
-                    'buttons'=> 
-                        [  
-                            'update'=>
-                            function($url,$model,$key)
-                            {
-                                return Html::a('<span class="glyphicon glyphicon-edit"></span>', ['/allocation-details/update','id'=>(string)$model->_id],['title' => 'Update']);
-                            },    
-                        
-                            'delete'=>
-                            function($url,$model,$key)
-                            {
-                                return $model->status === AllocationDetails::STATUS_NEW ? Html::a('<span class="glyphicon glyphicon-trash"></span>', ['/allocation-details/markdelete','id'=>(string)$model->_id],['title' => 'Delete']):' ';
-                            }
-                        ]
+                    ['class' => 'yii\grid\SerialColumn'],
+
+                    //'_id',
+                    'name',
+                    'wpLocCode',
+                    'region',
+                    'stateCode',
+                    'type',
+                    //'code',
+                    //'CMCNo',
+                    'fileNo',
+                    //'yearId',
+                    'marks',
+                    'allocation',
+                    //'paymentDate',
+                    //'Remarks',
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'header' => 'Actions',
+                        'template'=>'{view}{update}{delete}',
+                        'buttons'=> 
+                            [  
+                                'update'=>
+                                function($url,$model,$key)
+                                {
+                                    return Html::a('<span class="glyphicon glyphicon-edit"></span>', ['/allocation-details/update','id'=>(string)$model->_id],['title' => 'Update']);
+                                },    
+                            
+                                'delete'=>
+                                function($url,$model,$key)
+                                {
+                                    return $model->status === AllocationDetails::STATUS_NEW ? Html::a('<span class="glyphicon glyphicon-trash"></span>', ['/allocation-details/markdelete','id'=>(string)$model->_id],['title' => 'Delete']):' ';
+                                }
+                            ]
+                    ],
                 ],
-            ],
-        ]); 
-    ?>
-    <?php Pjax::end(); ?>
+            ]); 
+        ?>
+        <?php Pjax::end(); ?>
+        </div>
+    </div>
 </div>

@@ -17,8 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p><?php if(!($model->status==RegionMaster::STATUS_LOCKED)) ?>
         <?= Html::a('Update', ['update', 'id' => (string)$model->_id], ['class' => 'btn btn-primary']) ?>
-       <?php if(($model->status==RegionMaster::STATUS_INACTIVE)) ?>
+       <?php if($model->status==RegionMaster::STATUS_INACTIVE): ?>
         <?= Html::a('Activate', ['/region-master/mark', 'id' => (string)$model->_id, 'action'=>'activate'], ['class' => 'btn btn-warning']) ?>
+        <?php endif; ?>
     </p>
 
     <?= DetailView::widget([

@@ -28,6 +28,8 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
 {
     const STATUS_NEW = 'new';
     const STATUS_APPROVED = 'approved';
+    const ALLOC_INT = 'int';
+    const ALLOC_EXT = 'ext';
     /**
      * @inheritdoc
      */
@@ -56,6 +58,7 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
             'allocation',
             'paymentDate',
             'remarks',
+            'type',
             'status'
         ];
     }
@@ -89,8 +92,15 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
                 'status','in','range'=>[self::STATUS_NEW,self::STATUS_APPROVED,],
                 'strict'=>true
              ],
+             
              ['status','default','value'=>self::STATUS_NEW],
+             [   
+                'type','in','range'=>[self::ALLOC_EXT,self::ALLOC_INT,],
+                'strict'=>true
+             ],
+             ['type','default','value'=>self::ALLOC_EXT],
              ['marks','integer','min'=>0],
+             ['paymentDate','date','format'=>'dd-M-yyyy', 'max'=>strtotime(date_format(date_create(),'Y/m/d')) ,'tooBig'=>'Payment Date must be no greater than today'],
         ];
     }
 
@@ -102,7 +112,7 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
         return [
             '_id' => 'ID',
             'name' => 'Name',
-            'wpLocCode' => 'Wp Loc Code',
+            'wpLocCode' => 'Centre Code',
             'region' => 'Region',
             'stateCode' => 'State Code',
             'code' => 'Code',
@@ -112,7 +122,7 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
             'marks' => 'Marks',
             'allocation' => 'Allocation',
             'paymentDate' => 'Payment Date',
-            'Remarks' => 'Remarks',
+            'remarks' => 'Remarks',
         ];
     }
 

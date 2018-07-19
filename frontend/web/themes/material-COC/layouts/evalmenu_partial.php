@@ -83,13 +83,7 @@
                                             [
                                               'label'=> 'Sent Reminders', 'url'=> ['/reminder-trans/sent-reminders']
                                             ]
-                                    ],
-                                    'label' => 'Manage External Data', 'items'=>
-                                    [
-                                            [ 
-                                              'label'=>'Centre Allocation', 'url' => ['/allocation-details/index']
-                                            ],
-                                    ]
+                                    ],                                    
                         			     ],
                           		]
                         	  ],
@@ -157,11 +151,19 @@
 	                              	],
 	                              	'<li class="divider"></li>',
 	                              	[ 
-	                              	'label'=>'Monthwise Marksheet', 'url'=> ['/eval/monthwisemarksheet']
-	                              	]
+	                              	  'label'=>'Monthwise Marksheet', 'url'=> ['/eval/monthwisemarksheet']
+	                              	],
+                                  '<li class="divider"></li>',
+                                  [ 
+                                    'label'=>'Centre Allocation', 'url'=> ['/allocation-details/update-centre-allocations']
+                                  ],
+                                  '<li class="divider"></li>',
+                                  [ 
+                                    'label'=>'External Centre Allocation', 'url' => ['/allocation-details/index']
+                                  ],    
                             	]
+                                  
                             ],
-
                             [
               			  		    'label' => 'Utilities','items'=>
   	                      		[  

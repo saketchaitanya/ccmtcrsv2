@@ -43,11 +43,11 @@ class AllocationManager {
 			$model->allocationID = $key.$yearstring;
 			$model->allocation = $allocations[$key];
 			$model->yearId = $yearId;
+			$model->type = AllocationDetails::ALLOC_INT;
 			if($model->save()):
 				$res = true;
 			else:
 				$res = false;
-				break;
 			endif;
 		endforeach;	
 		return $res;
@@ -58,10 +58,28 @@ class AllocationManager {
 
 		$currYear = CurrentYear::getCurrentYear();
 		$data = ReportQueryManager::getMonthwiseMarksData((string)$currYear->_id);
+		$centresAll = Centres::findAll(['status'=>Centres::STATUS_ACTIVE]);
+		$centresAssoc = ArrayHelper::index($centresAll,'wpLocCode');
+		$keys = array_keys($centresAssoc);
+		$centreData = array(); 
+    	foreach ($keys as $key):
+			$centre = $centresAssoc[$key];
+        	$centreData[ $key ]=
+					[
+						'centreName'=>$centre->name,
+						'fileNo' =>$centre->fileNo,
+						'CMCNo'=>$centre->CMCNo,
+						'stateCode'=>$centre->stateCode,
+						'region'=>$centre->region,
+						'code'=>$centre->code,
+					];
+        endforeach;
+
 		$totalMarks = $data['totalMarks'];
-		$centreData = $data['centreData'];
-		$centreIds = array_keys($centreData);
-		$allocations = self::allocationLookup($centreIds,$totalMarks);
+		//$centreData = $data['centreData'];
+		//$centreIds = array_keys($centreData);
+		$allocations = self::allocationLookup($keys,$totalMarks);
+		$data['centreData']=$centreData;
 		$data['allocations']=$allocations;
 		$data['yearId'] = (string)$currYear->_id;	
 		return $data;

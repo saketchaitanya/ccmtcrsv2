@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'desc',
                 'wpLocCode',
                 'code',
+                'region',
                 'status',
                 //'phone',
                 //'fax',
