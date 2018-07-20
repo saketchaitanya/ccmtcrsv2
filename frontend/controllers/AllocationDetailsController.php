@@ -72,7 +72,8 @@ class AllocationDetailsController extends Controller
     {
         $model = new AllocationDetails();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) 
+        {
 
             $wpLoc = WpLocation::findOne(['id'=>$model->wpLocCode]);
                     $model->name = $wpLoc->name;
@@ -81,14 +82,28 @@ class AllocationDetailsController extends Controller
             $model->yearId =(string) $year->_id;
             $yearstring =substr($year->yearStartDate,-4).substr($year->yearEndDate,-4);
             $model->allocationID = $model->wpLocCode.$yearstring;
-            $model->status = AllocationDetails::ALLOC_EXT;
-            $model->save();
-            return $this->redirect(['view', 'id' => (string)$model->_id]);
+            //$model->status = AllocationDetails::ALLOC_EXT;
+            
+            if($model->save()):
+                $message = 1;
+            else:
+                $message = 'Failure.Record not created.';
+            endif;
+            return $message;
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        elseif (\yii::$app->request->isAjax)
+        {  
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+            //return $this->redirect(['view', 'id' => (string)$model->_id]);
+        }
+        else
+        {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        } 
     }
 
     
@@ -104,13 +119,29 @@ class AllocationDetailsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => (string)$model->_id]);
-        }
+        if ($model->load(Yii::$app->request->post())) 
+        {
 
-        return $this->render('update', [
-        'model' => $model,
-        ]);
+            if($model->save()):
+                $message = 1;
+            else:
+                $message = 'update failed';
+            endif;
+            return $message;
+        }
+        elseif (\yii::$app->request->isAjax)  
+        {  
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+           // return $this->redirect(['view', 'id' => (string)$model->_id]);
+        }
+        else
+        {
+            return $this->render('update', [
+                'model' => $model,
+                ]);
+        }
     }
 
      /**

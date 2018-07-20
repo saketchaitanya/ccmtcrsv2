@@ -21,13 +21,14 @@ use kartik\widgets\DatePicker;
     foreach ($stateCodeArr as $key=>$value):
         $stateCodeMap[$value]=$key.' - '.$value;
     endforeach;
+    $formName = 'create-allocation-form';
 ?>
 
 <div class="panel panel-default" style="margin:20px 20px">
     <div class="panel-heading"> <h3><?= Html::encode(ucwords(strtolower($this->title))) ?></h3></div>
     <div class="panel-body">
         <div class="allocation-details-form">
-            <?php $form = ActiveForm::begin(); ?>
+            <?php $form = ActiveForm::begin(['id'=>$formName]); ?>
 
             <?php echo $form->field($model, 'wpLocCode')->widget(Select2::classname(), 
                 [
@@ -126,3 +127,35 @@ use kartik\widgets\DatePicker;
         </div>
     </div>
 </div>
+<?php $script = <<< JS
+$('form#{$formName}').on('beforeSubmit', function(e)
+    {
+        var \$form = $(this);
+        $.post(
+            \$form.attr("action"),
+            \$form.serialize()
+        )
+        .done(function(result){
+            
+            if (result == 1)
+            {
+                $(\$form).trigger('reset');
+                \$(document).find('#allocmodal').modal('hide');
+                $.pjax.reload({container:'#alloc-grid'});
+            }
+            else
+            {
+               alert(result);
+                //$("#message").html(result.message);
+            }
+        }).fail(function()
+        {
+            alert('server error');
+        });
+    return false;
+    });
+JS;
+    
+$this->registerJS($script);
+
+?>

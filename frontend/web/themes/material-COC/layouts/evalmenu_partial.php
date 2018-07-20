@@ -145,22 +145,10 @@
 	                              	[ 
 	                              		'label'=>'Rates', 'url'=> ['/eval/view-allocation-master']
 	                              	],
-	                              	'<li class="divider"></li>',
-	                              	[ 
-	                              		'label'=>'Activities Summary', 'url'=> ['/eval/activitiessummary']
-	                              	],
-	                              	'<li class="divider"></li>',
-	                              	[ 
-	                              	  'label'=>'Monthwise Marksheet', 'url'=> ['/eval/monthwisemarksheet']
-	                              	],
-                                  '<li class="divider"></li>',
-                                  [ 
-                                    'label'=>'Centre Allocation', 'url'=> ['/allocation-details/update-centre-allocations']
-                                  ],
-                                  '<li class="divider"></li>',
-                                  [ 
-                                    'label'=>'External Centre Allocation', 'url' => ['/allocation-details/index']
-                                  ],    
+                                  	'<li class="divider"></li>',
+                                  	[ 
+                                    	'label'=>'Centre Allocation', 'url' => ['/allocation-details/index']
+                                  	],    
                             	]
                                   
                             ],
