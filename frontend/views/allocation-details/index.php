@@ -31,23 +31,29 @@ $this->params['breadcrumbs'][] = $this->title;
 ]);
 echo '<div id="modal-content"></div>';
 Modal::end();*/
+
 ?>
 
 
 <div class="allocation-details-index">
+<div class='panel panel-default'> 
+<div class='panel-body'>   
     <p align='right'>
         <?= Html::a('Create Allocation', ['create'], ['class' => 'btn btn-success','id'=>'createBtn']) ?>
     </p>
     <?= GridView::widget(
         [
             'dataProvider'=> $dataProvider,
-            'resizableColumns'=>true,
+            'responsive'=>true,
+            'hover'=>true,
+            'resizableColumns'=>false,
             'showPageSummary'=>true,
             'afterFooter'=> '',
             'pjax'=>true,
             'pjaxSettings'=>
             [
                 'neverTimeout'=>true,
+                'enablePushState'=>false,
                 'options'=>
                     [
                         'id'=>'alloc-grid',
@@ -57,7 +63,7 @@ Modal::end();*/
             'panel' => 
             [
                 'heading'=>'<span class="panel-title"><h4><i class="glyphicon glyphicon-thumbs-up"></i>'.$this->title.'</h4></span>',
-                'type'=>'info',        
+                'type'=>'info', 
                 'footer'=>false
             ],
             'columns' => 
@@ -83,10 +89,15 @@ Modal::end();*/
                     'template'=>'{view}{update}{delete}',
                     'buttons'=> 
                     [  
+                        'view'=>
+                        function($url,$model,$key)
+                        {
+                            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['/allocation-details/view','id'=>(string)$model->_id],['title' => 'View','class'=>'viewBtn','data-pjax' => '0']);
+                        },
                         'update'=>
                         function($url,$model,$key)
                         {
-                            return Html::a('<span class="glyphicon glyphicon-edit"></span>', ['/allocation-details/update','id'=>(string)$model->_id],['title' => 'Update','class'=>'updateBtn']);
+                            return Html::a('<span class="glyphicon glyphicon-edit"></span>', ['/allocation-details/update','id'=>(string)$model->_id],['title' => 'Update','class'=>'updateBtn','data-pjax' => '0']);
                         },    
                     
                         'delete'=>
@@ -142,11 +153,18 @@ JSRegister::begin([
 ?>
 
 <script>
-    $('#createBtn,.updateBtn').on('click', function(e)
+    $('#createBtn').on('click', function(e)
     {
         e.preventDefault();
         $('#allocmodal').modal('show').find('.modal-body').load($(this).attr('href'));
     });
+
+    $('.viewBtn').on('click', function(e)
+    {
+        e.preventDefault();
+        $('#allocmodal').modal('show').find('.modal-body').load($(this).attr('href'));
+    });
+
 
     $('#allocmodal').on('hidden.bs.modal', function () 
     {

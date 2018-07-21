@@ -8,18 +8,18 @@ use frontend\models\AllocationDetails;
 
 $this->title = 'Update Allocation ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Allocation', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => (string)$model->_id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="allocation-details-update">
-<?php if($model->status == AllocationDetails::ALLOC_EXT): ?>
+
+<?php if($model->type == AllocationDetails::ALLOC_EXT): ?>
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'model' => $model,'action'=>'update'
     ]) ?>
 <?php else: ?>
 	<?= $this->render('_form-internal', [
-        'model' => $model,
+        'model' => $model, 'action'=>'update'
     ]) ?>
 <?php endif; ?>
 </div>

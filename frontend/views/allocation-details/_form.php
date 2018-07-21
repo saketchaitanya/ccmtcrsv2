@@ -21,7 +21,7 @@ use kartik\widgets\DatePicker;
     foreach ($stateCodeArr as $key=>$value):
         $stateCodeMap[$value]=$key.' - '.$value;
     endforeach;
-    $formName = 'create-allocation-form';
+    $formName = 'create-allocation-form-ext';
 ?>
 
 <div class="panel panel-default" style="margin:20px 20px">
@@ -127,6 +127,9 @@ use kartik\widgets\DatePicker;
         </div>
     </div>
 </div>
+
+<?php if(!isset($action)||strlen($action)==0): ?>
+
 <?php $script = <<< JS
 $('form#{$formName}').on('beforeSubmit', function(e)
     {
@@ -150,12 +153,11 @@ $('form#{$formName}').on('beforeSubmit', function(e)
             }
         }).fail(function()
         {
-            alert('server error');
+            alert('There was an error in processing the request');
         });
     return false;
     });
 JS;
-    
-$this->registerJS($script);
+$this->registerJS($script); ?>
 
-?>
+<?php endif; ?>

@@ -21,7 +21,7 @@ use kartik\widgets\DatePicker;
     foreach ($stateCodeArr as $key=>$value):
         $stateCodeMap[$value]=$key.' - '.$value;
     endforeach;
-    $formName = 'create-allocation-form';
+    $formName = 'create-allocation-form-int';
 ?>
 
 <div class="panel panel-default" style="margin:20px 20px">
@@ -77,7 +77,7 @@ use kartik\widgets\DatePicker;
 
             <?= $form->field($model, 'remarks') ?>
             <div class="form-group">
-                <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                <?= Html::submitButton('Save', ['class' => 'btn btn-success','id'=>'saveBtn']) ?>
                 
                 <?php if($model->status !== AllocationDetails::STATUS_APPROVED): ?>
                 <?= Html::a('Approve', 
@@ -97,6 +97,7 @@ use kartik\widgets\DatePicker;
         </div>
     </div>
 </div>
+<?php if(!isset($action)||strlen($action)==0): ?>
 <?php $script = <<< JS
 $('form#{$formName}').on('beforeSubmit', function(e)
     {
@@ -124,8 +125,15 @@ $('form#{$formName}').on('beforeSubmit', function(e)
         });
     return false;
     });
+    
+
 JS;
     
 $this->registerJS($script);
-
 ?>
+<?php endif; ?>
+<?php
+//switch off debug before rendering...
+    if (class_exists('yii\debug\Module')) {
+    $this->off(\yii\web\View::EVENT_END_BODY, [\yii\debug\Module::getInstance(), 'renderToolbar']);
+} ?>

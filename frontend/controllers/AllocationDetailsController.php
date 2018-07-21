@@ -58,9 +58,11 @@ class AllocationDetailsController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+       
+            return $this->renderAjax('view', [
             'model' => $this->findModel($id),
-        ]);
+            ]);
+        
     }
 
     /**
@@ -119,25 +121,13 @@ class AllocationDetailsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) 
+        if ($model->load(Yii::$app->request->post()) && $model->save())
         {
-
-            if($model->save()):
-                $message = 1;
-            else:
-                $message = 'update failed';
-            endif;
-            return $message;
-        }
-        elseif (\yii::$app->request->isAjax)  
-        {  
-            return $this->renderAjax('update', [
-                'model' => $model,
-            ]);
-           // return $this->redirect(['view', 'id' => (string)$model->_id]);
+            return $this->redirect(['index']);
         }
         else
         {
+            //var_dump($model);
             return $this->render('update', [
                 'model' => $model,
                 ]);
