@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'regionCode',
             'regionalHead',
+            'sortingSeq',
             'status',
 
              ['class' => 'yii\grid\ActionColumn',

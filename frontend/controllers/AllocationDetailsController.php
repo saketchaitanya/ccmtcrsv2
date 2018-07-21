@@ -249,6 +249,17 @@ class AllocationDetailsController extends Controller
         return $this->render('centre-allocation-update',['model'=>$allocArray]);
     }
 
+    /** 
+     * Summary Report
+     */
+
+    public function actionGenerateSummaryReport()
+    {   
+        $yearId='5b1195f8b292c9de0d8b4567';
+        AllocationManager::getSummaryData($yearId);
+    }
+
+
     /**
      * Finds the AllocationDetails model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

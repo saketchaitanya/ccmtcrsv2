@@ -109,5 +109,36 @@ class AllocationManager {
 		return $amount;
 
 	}
+
+/* -------- Summary Report  --------- */
+	
+	public static function getSummaryData($yearId)
+	{
+		$year = CurrentYear::findOne(['id'=>$yearId]);
+
+		$allocs = AllocationDetails::find(['yearId'=>$yearId])->asArray()->all();
+		$allocStates = ArrayHelper::index($allocs, null, 'stateCode');
+		//\yii::$app->yiidump->dump($allocState);
+		$data = array();
+		
+		
+		foreach( $allocStates as $key=>$value):
+			$amount = 0;
+			$centrecount = 0;
+			foreach($value as $v)
+			{
+				$amount = $amount + (int)$v['allocation'];
+				$centrecount++;
+			}
+			$data[$key]['amount']=$amount;
+			$data[$key]['centrecount']=$centrecount;
+			$data[$key]['region']=$value[0]['region'];
+		endforeach;
+		\yii::$app->yiidump->dump($data);
+
+		exit();
+
+	}
+
 	
 }

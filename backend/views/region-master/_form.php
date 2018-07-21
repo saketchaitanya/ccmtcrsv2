@@ -3,6 +3,7 @@
 use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
 use kartik\widgets\Select2;
+use kartik\widgets\TouchSpin;
 use common\components\AcharyaHelper;
 use common\models\RegionMaster;
 use common\models\UserProfile;
@@ -68,7 +69,22 @@ use common\models\UserProfile;
                                     'allowClear' => true,
                             ],
             ]) ?>
-            
+    <?= $form->field($model, 'sortingSeq')
+                     ->widget(TouchSpin::class, 
+                        [
+                            'options' => 
+                            [
+                                    'placeholder' => 'Enter sequence for displaying regions in reports..',
+                            ],
+                            'pluginOptions'=>
+                            [
+                                'min' => 0,
+                                'step'=> 1,
+                                'max' => 100,
+                            ],
+                        ]);
+
+     ?>        
     <?= $form->field($model, 'status')->textInput(['disabled'=>true]) ?>
 
     <div class="form-group">

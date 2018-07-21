@@ -41,6 +41,7 @@ class RegionMaster extends \yii\mongodb\ActiveRecord
             'username',
             'regionalHead',
             'regHeadCode',
+            'sortingSeq',
             'status',
         ];
     }
@@ -52,9 +53,10 @@ class RegionMaster extends \yii\mongodb\ActiveRecord
     {
         return [
            
-            [['regionCode','username'],'unique'],
+            [['regionCode','username','sortingSeq'],'unique'],
             ['regionCode', 'filter', 'filter'=>'strtoupper'],
-            [['name','regionCode'],'required'],
+            [['name','regionCode','sortingSeq'],'required'],
+            [['sortingSeq'],'integer','min'=>1],
             [['regionalHead', 'status'], 'safe'],
             ['status', 'in' ,'range'=>[self::STATUS_ACTIVE,self::STATUS_INACTIVE,self::STATUS_LOCKED] ],
             ['status','default', 'value'=>self::STATUS_INACTIVE],
@@ -72,6 +74,7 @@ class RegionMaster extends \yii\mongodb\ActiveRecord
             'regionCode' => 'Region Code',
             'username'=>  'System UserName',
             'regionalHead' => 'Regional Head',
+            'sortingSeq' => 'Sorting Sequence in Report',
             'status' => 'Status',
         ];
     }

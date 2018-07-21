@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'regionCode',
             'regionalHead',
+            'sortingSeq',
             'status',
         ],
     ]) ?>
