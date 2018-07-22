@@ -193,7 +193,7 @@
                                     ],
   	                              	'<li class="divider"></li>',
   	                              	[ 
-  	                              		'label'=>'Payment Summary', 'url'=> ['/eval/paymentsummary']
+  	                              		'label'=>'Payment Summary', 'url'=> ['/allocation-details/summaryreport']
   	                              	],
   	                              	'<li class="divider"></li>',
   	                              	[ 

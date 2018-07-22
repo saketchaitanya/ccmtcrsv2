@@ -113,7 +113,7 @@ class StatesHelper
     	
     }
 
-    public static function getShortCode(string $name)
+    public static function getShortCode($name)
 	{
 
 		$code = self::searchStateCode($name,true);
@@ -121,10 +121,10 @@ class StatesHelper
 
 	}
 
-	public static function getStateForCode(string $code)
+	public static function getStateForCode($code)
 	{
-		$code = self::searchStateCode($name,false);
-		return $code;
+		$name = self::searchStateCode($code,false);
+		return $name;
 
 	}
 	public static function getCodeStateArray($flag = true)
@@ -178,18 +178,20 @@ class StatesHelper
 	}
 	private static  function searchStateCode($name, $flag)
 	{
-		$array = self::getCodeStateArray(true);
+		
 
 		if($flag==true):
-			$name = stringtolower($name);
-			$array_f = $array_flip($array);
-			$array_l = $array_change_key_case($array_f, CASE_LOWER);
+			$array = self::getCodeStateArray(false);
+			$name = strtolower($name);
+			$array_f = array_flip($array);
+			$array_l = array_change_key_case($array_f, CASE_LOWER);
 			$array = array_flip($array_l);
 			$code = $array[$name];
 			return $code;
 		
 		else:
-			$name = stringtoupper($name);
+			$array = self::getCodeStateArray(true);
+			$name = strtoupper($name);
 			$state = $array[$name];
 
 			return $state;

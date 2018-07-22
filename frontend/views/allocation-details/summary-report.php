@@ -47,8 +47,7 @@ use kartik\widgets\DepDrop;
 				generating report for latest data.
 		   	</div>
 		  	<hr />
-			<form id='summary-report-form' name='summary-report-form' 
-			action='allocation-details/fetchsummarysheet' method='post' target="_blank">
+			<form id='summary-report-form' name='summary-report-form' action='allocation-details/fetchsummaryreport' method='post' target="_blank" >
 				<div class='row'>
 					<div class='col-xs-12, col-md-8'>
 				   		<?php
@@ -63,20 +62,21 @@ use kartik\widgets\DepDrop;
 				        		],
 			        		]);
 			        	?>
-			   			<?php //echo Html::hiddenInput('yearId', $defaultYear,['id'=>'year-id']); ?>
 					</div>
+					 <input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>"
+           				value="<?=Yii::$app->request->csrfToken?>"/>
 			   		<div class='col-xs-6, col-md-2'>
 						<?php 
 		 					echo Html::Button('Generate Report',
 							[
 								'onClick'=>'send();',
 								'class' => 'loadRepContent btn btn-success',
-									'value'=> Yii::$app->urlManager->createAbsoluteUrl("que-summary/fetchmonthwisemarksheet"),
+									'value'=> Yii::$app->urlManager->createAbsoluteUrl("allocation-details/fetchsummaryreport"),
 								]);
 						?>
 		 		    </div>
 		 			<div class='col-xs-6, col-md-2'>		
-					 	<button type="submit" class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('que-summary/monthwisemarksheetpdf')?>" target="_blank" >GeneratePdf</button>
+					 	<button type="submit" class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('allocation-details/summaryreportpdf')?>" target="_blank" >GeneratePdf</button>
 					</div>
 				</div>
 			</form>
@@ -92,11 +92,11 @@ use kartik\widgets\DepDrop;
 	function send()
 		 {
 		   $('#loader').show();
+		   var data=$('#summary-report-form').serialize();
 
-		   var data=$("#monthwise-marksheet-form").serialize();
 		  $.ajax({
 		   	type: 'POST',
-		    url: '<?php echo Yii::$app->urlManager->createAbsoluteUrl("que-summary/fetchmonthwisemarksheet"); ?>',
+		    url: '<?php echo Yii::$app->urlManager->createAbsoluteUrl("allocation-details/fetchsummaryreport"); ?>',
 		   	data:data,
 			success:function(data){
 		                $('#rep-content').html(data);
@@ -126,7 +126,7 @@ use kartik\widgets\DepDrop;
 			    	});
 				});",
 		\yii\web\View::POS_END,
-		'monthwisemarksheet-handler'
+		'summary-report-handler'
 	);
 ?>
 
@@ -162,3 +162,8 @@ JSRegister::begin(
 
     </script>
 <?php JSRegister::end(); ?>
+<?php $this->registerCss(" 
+						  thead, tfoot { background-color: #F5F5F5; font-weight:bold;}
+						  thead {border-top:2px solid gray}
+						  tfoot {border-bottom:2px solid gray; border-top:2px double gray}
+						");	?>

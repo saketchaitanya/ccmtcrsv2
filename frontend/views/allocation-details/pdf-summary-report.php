@@ -2,68 +2,73 @@
 	use \common\components\CommonHelpers;
 	use frontend\assets\CcmtCrsAsset;
   	use yii\bootstrap\Alert;
+  	use yii\helpers\ArrayHelper;
 
-  		CcmtCrsAsset::register($this);
+  		$resdata = unserialize($response->data);
+  		$data = $resdata['data'];
+		$model=$data['stateData'];
+		$regions = $data['regions'];
+		$year=$resdata['year'];
+		$tCentres = ArrayHelper::getColumn($regions,'totalCentres');
+		$ftotal = ArrayHelper::getColumn($regions,'subtotal');
+		$gcodes = ArrayHelper::getColumn($regions,'groupCode');
+		$gcodesstr = array_reduce($gcodes,function($v1,$v2)
+						{
+							return $v1.' + '.$v2;	
+						}
+			);
+		$gCodeString = substr($gcodesstr,2);
+		$totalCentres = array_sum($tCentres);
+		$grandTotal = array_sum($ftotal);
 
-		$data = unserialize($response->data);
-		$model=$data['marksData'];
-		$totalMarks = $data['totalMarks'];
-		$centreData = $data['centreData']; 
-		$reminders = $data['reminders'];
-		$year = $data['forYear'];
-		$keys = $data['keys'];
 	?>
-	<?php	if($model): ?>
-		<h4 class='text-center'>Central Chinmaya Mission Trust - Mumbai<br/>Details of Questionnaire Evaluation for Year: <?php echo $year ?></h4>
-		<table class='table table-bordered'>
+	<?php if($model): ?>
+	<div class='table-responsive'>
+		<h4 class='text-center'>Central Chinmaya Mission Trust - Mumbai<br/>Summary of Evaluation of monthly Questionnaire for Year: <?php echo $year ?></h4>
+		<table class='table table-condensed'>
 			<thead>
 				<tr>
-					<th> File No</th>
-					<th> CMC No</th>
-					<th> Centre Name</th>
-					<th> State Code</th>
-					<th> Apr</th>
-					<th> May</th>
-					<th> Jun</th>
-					<th> Jul</th>
-					<th> Aug</th>
-					<th> Sep</th>
-					<th> Oct</th>
-					<th> Nov</th>
-					<th> Dec</th>
-					<th> Jan</th>
-					<th> Feb</th>
-					<th> Mar</th>
-					<th> Total</th>
-					<th>Reminders Sent</th>
+					<th> No of Centres</th>
+					<th> State </th>
+					<th align='right'> Amount </th>					
 				</tr>
 			</thead>
-			<tbody>	
-				<?php foreach($keys as $key): ?>
+			<tfoot>
 				<tr>
-					<td> <?= $centreData[$key]['fileNo'] ?> </td>
-					<td> <?= $centreData[$key]['CMCNo'] ?> </td>
-					<td> <?= ucwords(strtolower($centreData[$key]['centreName']))  ?> </td>
-					<td> <?= $centreData[$key]['stateCode']  ?> </td>
-					<td> <?= isset($model[$key]['Apr'])? $model[$key]['Apr']['marks']:'' ?> </td>
-					<td> <?= isset($model[$key]['May'])? $model[$key]['May']['marks']:'' ?> </td>
-					<td> <?= isset($model[$key]['Jun'])? $model[$key]['Jun']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Jul'])? $model[$key]['Jul']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Aug'])? $model[$key]['Aug']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Sep'])? $model[$key]['Sep']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Oct'])? $model[$key]['Oct']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Nov'])? $model[$key]['Nov']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Dec'])? $model[$key]['Dec']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Jan'])? $model[$key]['Jan']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Feb'])? $model[$key]['Feb']['marks']:''?> </td>
-					<td> <?= isset($model[$key]['Mar'])? $model[$key]['Mar']['marks']:''?> </td>
-					<td> <?= isset($totalMarks[$key])?$totalMarks[$key]:'' ?></td>
-					<td> <?= $reminders[$key] ?> </td>
-
+					<td><?= $totalCentres ?>
+					</td>
+					<td>Grand Total ( <?= $gCodeString ?> )
+					</td>
+					<td  align='right'><?= $grandTotal ?>
+					</td>
 				</tr>
+			</tfoot>
+			<tbody>	
+				<?php foreach($regions as $key=>$value):
+					$reg = array_keys($value)[0]; 
+					foreach($model as $m):
+						if($m['region']==$reg): ?>
+						 <tr>
+							<td> <?= $m['centrecount'] ?> </td>
+							<td> <?= $m['name'] ?> </td>
+							<td align='right'> <?= $m['amount']  ?> </td>
+						</tr>
+						<?php endif; ?>
+					<?php endforeach; ?>
+					<tr style='font-weight:bold' >
+						<td> <?= $regions[$key]['totalCentres'] ?>
+						</td>
+						<td >
+							(<?= $value['groupCode'] ?>)-TOTAL CENTRES &emsp;REGIONAL (<?= strtoupper($regions[$key]['region']) ?>)
+						</td>
+						<td style='text-align:right'><?= $regions[$key]['subtotal'] ?>
+						</td>
+					</tr>
 				<?php endforeach; ?>
+				
 			</tbody>	
 		</table>
+	</div><!-- last div -->
 	<?php
 		else:
 		$string = "<div class='alert alert-danger' role='alert'>

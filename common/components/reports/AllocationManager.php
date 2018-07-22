@@ -7,17 +7,21 @@ use frontend\models\QueSummary;
 use common\models\CurrentYear;
 use common\models\Centres;
 use common\models\AllocationMaster;
+use common\models\RegionMaster;
 use frontend\models\AllocationDetails;
 use frontend\models\GrpLiterary;
 use frontend\models\GrpVidyalaya;
 use common\components\CentresIndiaHelper;
 use common\components\reports\ReportQueryManager;
 use yii\helpers\ArrayHelper;
+use common\components\StatesHelper;
 
 
 class AllocationManager {
 
-
+/**
+ * Process for generating allocation
+ */
 	public static function updateCurrentAllocations()
 	{
 		$data = self::getMarksAndAllocations();
@@ -118,9 +122,9 @@ class AllocationManager {
 
 		$allocs = AllocationDetails::find(['yearId'=>$yearId])->asArray()->all();
 		$allocStates = ArrayHelper::index($allocs, null, 'stateCode');
-		//\yii::$app->yiidump->dump($allocState);
-		$data = array();
 		
+
+		$data = array();
 		
 		foreach( $allocStates as $key=>$value):
 			$amount = 0;
@@ -130,15 +134,45 @@ class AllocationManager {
 				$amount = $amount + (int)$v['allocation'];
 				$centrecount++;
 			}
+			$data[$key]['name']=StatesHelper::getStateForCode($key);
 			$data[$key]['amount']=$amount;
 			$data[$key]['centrecount']=$centrecount;
 			$data[$key]['region']=$value[0]['region'];
+		endforeach;	
+
+
+		$regions = RegionMaster::find()->where(['status'=>[RegionMaster::STATUS_ACTIVE,RegionMaster::STATUS_LOCKED]])->asArray()->all();
+		
+		ArrayHelper::multisort($regions, 'sortingSeq', SORT_ASC);
+		$regAssoc=ArrayHelper::map($regions,'regionCode','name','sortingSeq');
+			
+		$alphabets=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+		$datavals=array_values($data);
+		$subtotal = array();
+		$centrecount = array();
+		foreach ($regAssoc as $key=>&$value):
+
+			$regAssoc[$key]['groupCode'] = $alphabets[(int)$key-1];
+			$region = array_keys($value)[0];
+			$value['subtotal']=0;
+			$value['totalCentres']=0;
+			$value['region']=$value[$region];
+			$subtotal[$region]=0;
+			$centrecount[$region]=0;
 		endforeach;
-		\yii::$app->yiidump->dump($data);
-
-		exit();
-
-	}
-
+			foreach($datavals as $dv):
+				$subtotal[$dv['region']]=$subtotal[$dv['region']]+$dv['amount'];
+				$centrecount[$dv['region']]=$centrecount[$dv['region']]+$dv['centrecount'];
+			endforeach;
 	
-}
+		
+		foreach ($regAssoc as $key=>&$value):
+			$region = array_keys($value)[0];
+		 	$value['subtotal']=$subtotal[$region];
+		 	$value['totalCentres']=$centrecount[$region];
+		endforeach;
+		
+		$res= ['stateData'=>$data, 'regions'=>$regAssoc];
+		return $res;
+		}
+	}

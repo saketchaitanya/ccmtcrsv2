@@ -253,10 +253,78 @@ class AllocationDetailsController extends Controller
      * Summary Report
      */
 
-    public function actionGenerateSummaryReport()
+    public function actionSummaryreport()
     {   
-        $yearId='5b1195f8b292c9de0d8b4567';
-        AllocationManager::getSummaryData($yearId);
+        return $this->render('summary-report');
+        
+    }
+
+     /**
+     *  Generates ajax report data for summary report and populates the view
+     */
+    public function actionFetchsummaryreport()
+    {
+          $model=self::getSummaryReportModel();
+
+        if (\Yii::$app->request->isAjax):
+            $response = \Yii::$app->response;
+          //  $response->format = \yii\web\Response::FORMAT_JSON;
+            $response->data = $model;
+            $response->statusCode = 200;
+           /*return  $this->renderAjax('gen-sum-status',['response'=>$response]); *///not used as it is slower than renderPartial.
+           return $this->renderPartial('_ajax-summary-report',['response'=>$response]);
+        else:
+         throw new \yii\web\BadRequestHttpException;
+        endif;
+    }
+
+    /*
+     * Generates data based on post values for activities-at-a-glance report
+     */
+    private static function getSummaryReportModel()
+    {
+      $post = \Yii::$app->request->post();
+
+      $yearId= $post['refYear'];
+     
+      $year = \common\models\CurrentYear::findOne(['_id'=>$yearId]);
+      $startDate = $year->yearStartDate;
+      $endDate = $year->yearEndDate;
+      $forYear = substr($startDate,-4).' - '.substr($endDate,-4);
+
+      $res = AllocationManager::getSummaryData($yearId);
+        $model = [
+              'data'=>$res,
+              'year'=>$forYear,
+          ];
+
+      return $model;
+
+    }
+    public function actionSummaryreportpdf() 
+   {
+
+      $post =\Yii::$app->request->post();
+      
+      // get your HTML raw content without any layouts or scripts
+      if(strlen($post['refYear'])>0):
+          $model=self::getSummaryReportModel();
+      else:
+        throw new \yii\web\BadRequestHttpException('Year should be selected for generating pdf');
+      endif;
+
+     $response = \Yii::$app->response;
+     // $response->format = \yii\web\Response::FORMAT_JSON;
+     $response->data = serialize($model);
+     $response->statusCode = 200;
+          
+      $contents = $this->renderAjax(
+                'pdf-summary-report',[
+                        'response' => $response,
+                    ]);
+      $content = serialize($contents);
+        //generates a pdf in the browser window
+      $pdf = Yii::$app->pdf->generatePdf($contents,null,'Summary of Questionnaire Evaluations','|Page {PAGENO}|'.' '.\Yii::$app->name.':'.date("d-M-Y:h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_PORTRAIT]);
     }
 
 
@@ -275,4 +343,11 @@ class AllocationDetailsController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function beforeAction($action) 
+    { 
+        $this->enableCsrfValidation = false; 
+        return parent::beforeAction($action); 
+    }
+
 }

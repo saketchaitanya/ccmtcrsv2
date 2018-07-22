@@ -88,6 +88,8 @@ use kartik\widgets\DepDrop;
 			        	?>
 			   			<?php echo Html::hiddenInput('yearId', $defaultYear,['id'=>'year-id']); ?>
 					</div>
+					<input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>"
+           				value="<?=Yii::$app->request->csrfToken?>"/>
 					<div class='col-xs-12, col-md-5'>
 						<?php			  	
 						 	echo   

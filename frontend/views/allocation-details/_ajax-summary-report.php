@@ -2,39 +2,76 @@
 	use \common\components\CommonHelpers;
 	use frontend\assets\CcmtCrsAsset;
   	use yii\bootstrap\Alert;
+  	use yii\helpers\ArrayHelper;
 
   		CcmtCrsAsset::register($this);
 
-		$data = $response->data;
-		$model=$data['marksData'];
-		$noOfCentres = $data['noOfCentres'];
-		$statelist = $data['stateList']; 
-		$amount = $data['amount'];
-		$keys = $data['keys'];
+		$data = $response->data['data'];
+		
+		$model=$data['stateData'];
+		$regions = $data['regions'];
+		$year=$response->data['year'];
+		$tCentres = ArrayHelper::getColumn($regions,'totalCentres');
+		$ftotal = ArrayHelper::getColumn($regions,'subtotal');
+		$gcodes = ArrayHelper::getColumn($regions,'groupCode');
+		$gcodesstr = array_reduce($gcodes,function($v1,$v2)
+						{
+							return $v1.' + '.$v2;	
+						}
+			);
+		$gCodeString = substr($gcodesstr,2);
+		$totalCentres = array_sum($tCentres);
+		$grandTotal = array_sum($ftotal);
+
 	?>
 	<?php if($model): ?>
 	<div class='table-responsive'>
-		<h4 class='text-center'>Central Chinmaya Mission Trust - Mumbai<br/>Details of Questionnaire Evaluation for Year: <?php echo $year ?></h4>
-		<table class='table table-bordered'>
+		<h4 class='text-center'>Central Chinmaya Mission Trust - Mumbai<br/>Summary of Evaluation of monthly Questionnaire for Year: <?php echo $year ?></h4>
+		<table class='table table-condensed'>
 			<thead>
 				<tr>
 					<th> No of Centres</th>
 					<th> State </th>
-					<th> Amount </th>					
+					<th align='right'> Amount </th>					
 				</tr>
 			</thead>
-			<tbody>	
-				<?php foreach($keys as $key): ?>
+			<tfoot>
 				<tr>
-					<td> <?= $noOfCentres[$key]['fileNo'] ?> </td>
-					<td> <?= $stateList[$key]['state'] ?> </td>
-					<td> <?= $amount[$key]['amount']  ?> </td>
+					<td><?= $totalCentres ?>
+					</td>
+					<td>Grand Total ( <?= $gCodeString ?> )
+					</td>
+					<td  align='right'><?= $grandTotal ?>
+					</td>
 				</tr>
+			</tfoot>
+			<tbody>	
+				<?php foreach($regions as $key=>$value):
+					$reg = array_keys($value)[0]; 
+					foreach($model as $m):
+						if($m['region']==$reg): ?>
+						 <tr>
+							<td> <?= $m['centrecount'] ?> </td>
+							<td> <?= $m['name'] ?> </td>
+							<td align='right'> <?= $m['amount']  ?> </td>
+						</tr>
+						<?php endif; ?>
+					<?php endforeach; ?>
+					<tr style='font-weight:bold' >
+						<td> <?= $regions[$key]['totalCentres'] ?>
+						</td>
+						<td >
+							(<?= $value['groupCode'] ?>)-TOTAL CENTRES &emsp;REGIONAL (<?= strtoupper($regions[$key]['region']) ?>)
+						</td>
+						<td style='text-align:right'><?= $regions[$key]['subtotal'] ?>
+						</td>
+					</tr>
 				<?php endforeach; ?>
+				
 			</tbody>	
 		</table>
 	</div><!-- last div -->
-		
+	
 	<?php
 	else:
 		$string = "<div class='alert alert-danger' role='alert'>

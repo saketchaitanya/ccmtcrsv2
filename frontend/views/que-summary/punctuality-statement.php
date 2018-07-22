@@ -64,6 +64,8 @@ use kartik\widgets\DepDrop;
 			        		]);
 			        	?>
 					</div>
+					<input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>"
+           				value="<?=Yii::$app->request->csrfToken?>"/>
 			   		<div class='col-xs-6, col-md-2'>
 						<?php 
 		 					echo Html::Button('Generate Report',
