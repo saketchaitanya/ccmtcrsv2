@@ -43,6 +43,17 @@ class AllocationDetailsController extends Controller
         AllocationDetails::getExtCentres();
         $dataProvider = new ActiveDataProvider([
             'query' => AllocationDetails::find(),
+            'pagination' =>    
+            [
+                    'pageSize' => 20,
+            ],
+            'sort' => 
+            [
+                'defaultOrder' => 
+                [
+                    'name' => SORT_ASC,
+                ]
+            ],
         ]);
 
         return $this->render('index', [
@@ -314,17 +325,17 @@ class AllocationDetailsController extends Controller
       endif;
 
      $response = \Yii::$app->response;
-     // $response->format = \yii\web\Response::FORMAT_JSON;
-     $response->data = serialize($model);
+      $response->format = \yii\web\Response::FORMAT_RAW;
+     $response->data = json_encode($model);
      $response->statusCode = 200;
           
-      $contents = $this->renderAjax(
+      $contents = $this->renderPartial(
                 'pdf-summary-report',[
                         'response' => $response,
                     ]);
       $content = serialize($contents);
         //generates a pdf in the browser window
-      $pdf = Yii::$app->pdf->generatePdf($contents,null,'Summary of Questionnaire Evaluations','|Page {PAGENO}|'.' '.\Yii::$app->name.':'.date("d-M-Y:h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_PORTRAIT]);
+      $pdf = Yii::$app->pdf->generatePdf($contents,null,'Summary of Questionnaire Evaluations','|Page {PAGENO}|'.' '.\Yii::$app->name.'<br/>'.date("d-M-Y h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_PORTRAIT]);
     }
 
 

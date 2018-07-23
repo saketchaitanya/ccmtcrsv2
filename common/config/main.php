@@ -126,13 +126,13 @@ return
                     // ...
             'formatters' => 
             [
-                \yii\web\Response::FORMAT_JSON => 
+               /* \yii\web\Response::FORMAT_JSON => 
                 [
                     'class' => 'yii\web\JsonResponseFormatter',
                     //'prettyPrint' => YII_DEBUG, // use "pretty" output in debug mode
                     'encodeOptions' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK,
                     // ...
-                ],
+                ],*/
             ],
         ], 
 

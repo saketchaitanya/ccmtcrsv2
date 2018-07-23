@@ -41,13 +41,23 @@ Modal::end();*/
     <p align='right'>
         <?= Html::a('Create Allocation', ['create'], ['class' => 'btn btn-success','id'=>'createBtn']) ?>
     </p>
+<?php  
+    $panelFooterTemplate = '
+       <div class="kv-panel-pager text-center">
+         {pager}
+        </div>
+            {footer}
+        <div class="clearfix"></div>'
+ ?>
+
     <?= GridView::widget(
         [
             'dataProvider'=> $dataProvider,
             'responsive'=>true,
             'hover'=>true,
             'resizableColumns'=>false,
-            'showPageSummary'=>true,
+            'panelFooterTemplate'=>$panelFooterTemplate,
+           // 'showPageSummary'=>true,
             'afterFooter'=> '',
             'pjax'=>true,
             'pjaxSettings'=>
@@ -64,7 +74,8 @@ Modal::end();*/
             [
                 'heading'=>'<span class="panel-title"><h4><i class="glyphicon glyphicon-thumbs-up"></i>'.$this->title.'</h4></span>',
                 'type'=>'info', 
-                'footer'=>false
+
+                
             ],
             'columns' => 
             [

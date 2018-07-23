@@ -3,10 +3,11 @@
 	use frontend\assets\CcmtCrsAsset;
   	use yii\bootstrap\Alert;
   	use yii\helpers\ArrayHelper;
-
-  		$resdata = unserialize($response->data);
+		$res = array();
+  		$resdata=json_decode($response->data,true);
+  		
   		$data = $resdata['data'];
-		$model=$data['stateData'];
+		$model= $data['stateData'];
 		$regions = $data['regions'];
 		$year=$resdata['year'];
 		$tCentres = ArrayHelper::getColumn($regions,'totalCentres');
@@ -24,8 +25,9 @@
 	?>
 	<?php if($model): ?>
 	<div class='table-responsive'>
-		<h4 class='text-center'>Central Chinmaya Mission Trust - Mumbai<br/>Summary of Evaluation of monthly Questionnaire for Year: <?php echo $year ?></h4>
-		<table class='table table-condensed'>
+		<h4 class='text-center'><u>Central Chinmaya Mission Trust - Mumbai<br/>Summary of Evaluation of Questionnaires for Year: <?php echo $year ?></u></h4>
+		<br/><br/>
+		<table class='table'>
 			<thead>
 				<tr>
 					<th> No of Centres</th>
@@ -35,11 +37,11 @@
 			</thead>
 			<tfoot>
 				<tr>
-					<td><?= $totalCentres ?>
+					<td align='center'><b><?= $totalCentres ?></b>
 					</td>
-					<td>Grand Total ( <?= $gCodeString ?> )
+					<td><b>GRAND TOTAL( <?= $gCodeString ?> )</b>
 					</td>
-					<td  align='right'><?= $grandTotal ?>
+					<td  align='right'><b><?= $grandTotal ?></b>
 					</td>
 				</tr>
 			</tfoot>
@@ -49,19 +51,19 @@
 					foreach($model as $m):
 						if($m['region']==$reg): ?>
 						 <tr>
-							<td> <?= $m['centrecount'] ?> </td>
+							<td align='center'> <?= $m['centrecount'] ?> </td>
 							<td> <?= $m['name'] ?> </td>
 							<td align='right'> <?= $m['amount']  ?> </td>
 						</tr>
 						<?php endif; ?>
 					<?php endforeach; ?>
-					<tr style='font-weight:bold' >
-						<td> <?= $regions[$key]['totalCentres'] ?>
+					<tr>
+						<td align='center'><b><?= $regions[$key]['totalCentres'] ?><b>
 						</td>
-						<td >
-							(<?= $value['groupCode'] ?>)-TOTAL CENTRES &emsp;REGIONAL (<?= strtoupper($regions[$key]['region']) ?>)
+						<td ><b>
+							(<?= $value['groupCode'] ?>)-TOTAL CENTRES    REGIONAL (<?= strtoupper($regions[$key]['region']) ?>)</b>
 						</td>
-						<td style='text-align:right'><?= $regions[$key]['subtotal'] ?>
+						<td align='right'><b><?= $regions[$key]['subtotal'] ?></b>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -69,6 +71,10 @@
 			</tbody>	
 		</table>
 	</div><!-- last div -->
+	<br/><br/><br/>
+	<div align='right'>
+		<b>( <?= Yii::$app->params['SigningAuthority'] ?> )</b>
+	</div>
 	<?php
 		else:
 		$string = "<div class='alert alert-danger' role='alert'>
