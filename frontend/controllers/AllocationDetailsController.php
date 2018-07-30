@@ -338,6 +338,16 @@ class AllocationDetailsController extends Controller
       $pdf = Yii::$app->pdf->generatePdf($contents,null,'Summary of Questionnaire Evaluations','|Page {PAGENO}|'.' '.\Yii::$app->name.'<br/>'.date("d-M-Y h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_PORTRAIT]);
     }
 
+/**
+ * Revised Rates for Evaluation Report
+ */
+
+ public function actionRevisedratesreport()
+ {
+
+    return $this->render('revised-rates-report');
+
+ } 
 
     /**
      * Finds the AllocationDetails model based on its primary key value.

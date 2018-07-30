@@ -14,13 +14,13 @@ $this->title = 'Allocations';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div style='color:red'><?php
-        $session=\Yii::$app->session;
+     /*   $session=\Yii::$app->session;
         if ($session->hasFlash('deleteStatus')):
-            $sessionFlash= $session->getFlash('deleteStatus');
+            echo $sessionFlash= $session->getFlash('deleteStatus');
         elseif($session->hasFlash('approveStatus')):
-             $sessionFlash= $session->getFlash('approveStatus');
+            echo $sessionFlash= $session->getFlash('approveStatus');
         endif;
-        
+        */
 ?></div>
 <?php 
 /*Modal:: begin([
@@ -36,6 +36,7 @@ Modal::end();*/
 
 
 <div class="allocation-details-index">
+
 <div class='panel panel-default'> 
 <div class='panel-body'>   
     <p align='right'>

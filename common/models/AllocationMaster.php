@@ -12,6 +12,7 @@ use Yii;
  *
  * @property \MongoId|string $_id
  * @property mixed $fromMarks
+ 
  * @property mixed $toMarks
  * @property mixed $activeDate
  * @property mixed $status
@@ -24,6 +25,7 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
     const STATUS_DELETED = 'deleted';
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
+    const STATUS_NEW = 'new';
 
     
     public static function collectionName()
@@ -36,7 +38,8 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
      */
     public function attributes()
     {
-        return [
+        return 
+        [
             '_id',
             'rangeArray',
             'activeDate',
@@ -54,11 +57,12 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
 
     public function behaviors()
     {
-        return [
-                 TimestampBehavior::class,
-                 BlameableBehavior::class,
-                 UnameBlameableBehavior::class,
-            ];
+        return 
+        [
+             TimestampBehavior::class,
+             BlameableBehavior::class,
+             UnameBlameableBehavior::class,
+        ];
     }
     /**
      * @inheritdoc
@@ -68,8 +72,14 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
         return [
 
             [['rangeArray', 'activeDate','approvedBy'], 'required'],
-            ['status','in','range'=> [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-            ['status','default','value'=>self::STATUS_INACTIVE],
+            ['status','in','range'=> [
+                                        self::STATUS_ACTIVE, 
+                                        self::STATUS_INACTIVE, 
+                                        self::STATUS_DELETED, 
+                                        self::STATUS_NEW
+                                    ]
+                ],
+            ['status','default','value'=>self::STATUS_NEW],
             ['approvalDate','date','format'=>'php:d-m-Y'],
         ];
     }

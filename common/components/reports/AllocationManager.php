@@ -17,7 +17,8 @@ use yii\helpers\ArrayHelper;
 use common\components\StatesHelper;
 
 
-class AllocationManager {
+class AllocationManager 
+{
 
 /**
  * Process for generating allocation
@@ -93,25 +94,30 @@ class AllocationManager {
 	{
 
 		$allocation = AllocationMaster::findOne(['status'=>AllocationMaster::STATUS_ACTIVE]);
-		$ranges = $allocation->rangeArray;
-		$amount = array();
-		foreach ($centreIds as $centreId):
-			if(array_key_exists($centreId,$total) && $total[$centreId]>0):
-				
-				foreach ($ranges as $range):
-					$llimit = $range['startMarks'];
-					$ulimit = $range['endMarks'];
-					if((($total[$centreId])<= $ulimit)  && ($total[$centreId]>=$llimit)):
-						$amount[$centreId]=$range['Rates'];
-					endif;	
-				endforeach;
+		if(!is_null($allocation)):
+			$ranges = $allocation->rangeArray;
+			$amount = array();
+			foreach ($centreIds as $centreId):
+				if(array_key_exists($centreId,$total) && $total[$centreId]>0):
+					
+					foreach ($ranges as $range):
+						$llimit = $range['startMarks'];
+						$ulimit = $range['endMarks'];
+						if((($total[$centreId])<= $ulimit)  && ($total[$centreId]>=$llimit)):
+							$amount[$centreId]=$range['Rates'];
+						endif;	
+					endforeach;
 
-			else:
-				$amount[$centreId] =0;
-			endif;
-		endforeach;
-		return $amount;
-
+				else:
+					$amount[$centreId] =0;
+				endif;
+			endforeach;
+			return $amount;
+		else:
+			echo '<div class="alert alert-danger">No active rates-allocation record found. No allocations updated</div>';
+		exit();
+		
+		endif;
 	}
 
 /* -------- Summary Report  --------- */
@@ -174,5 +180,40 @@ class AllocationManager {
 		
 		$res= ['stateData'=>$data, 'regions'=>$regAssoc];
 		return $res;
-		}
 	}
+
+/* --- revised rates report ----- */
+
+	/*public static function getRevisedRatesData()
+	{
+		 $allocs = AllocationMaster::findAll(
+		 				[
+		 					'status'=>
+ 							[
+	 							AllocationMaster::STATUS_ACTIVE,
+	 							AllocationMaster::STATUS_INACTIVE
+	 						]
+	 					]);
+		 
+		 $aTable = array();
+
+		 foreach ($allocs as $alloc)
+		 {
+		 	if($alloc->status == AllocationMaster::STATUS_ACTIVE)
+		 	{
+		 		$aTable[] = $alloc->startMarks;
+		 	}
+		 }
+
+		 for ($i=0; $i<sizeof($aTable); $i++)
+		 {
+		 	foreach ($allocs as $alloc)
+		 	{
+		 		if ($model->startMarks == $aTable[$i])
+		 			
+		 	}
+
+		 }
+
+	}	*/	
+}//class ends

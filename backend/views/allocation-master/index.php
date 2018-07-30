@@ -20,20 +20,26 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create An Allocation', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php $session=Yii::$app->session;
+    <?php $session= \Yii::$app->session;
         if ($session->hasFlash('errorActivating'))
         {
-            echo $session->getFlash('errorActivating');
+            $sessionFlash= $session->getFlash('errorActivating');
         }
         if($session->hasFlash('allocationDeleted'))
         {
-            echo $session->getFlash('allocationDeleted');
+            $sessionFlash= $session->getFlash('allocationDeleted');
         }
         if ($session->hasFlash('failedUpdate'))
         {
-            echo $session->getFlash('failedUpdate');
+           $sessionFlash= $session->getFlash('failedUpdate');
         }
-    ?>
+        if(isset($sessionFlash)):
+            echo  \yii\bootstrap\Alert::widget([
+                'options' => ['class' => 'alert-warning'],
+                'body' => $sessionFlash,
+            ]);
+        endif;
+        ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -41,6 +47,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
             '_id',
             'activeDate',
+            'approvedBy',
+            'approvalDate',
             'status',
 
             ['class' => 'yii\grid\ActionColumn',
@@ -52,14 +60,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 },
                                 'update'=> function($url,$model,$key)
                                 {
-                                    return $model->status == AllocationMaster::STATUS_ACTIVE ?
+                                    return ($model->status == AllocationMaster::STATUS_ACTIVE || $model->status==AllocationMaster::STATUS_NEW)?
                                     Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['/allocation-master/update','id'=>(string)$model->_id],['title' => 'Update']):'';
                                 },
 
                                 'activate'=>
                                 function($url,$model)
                                 {
-                                     return $model->status == AllocationMaster::STATUS_INACTIVE? Html::a('<span class="glyphicon glyphicon-ok"></span>',['/allocation-master/activate', 'id' =>(string)$model->_id],['title'=>'Activate']
+                                     return ($model->status == AllocationMaster::STATUS_INACTIVE || $model->status==AllocationMaster::STATUS_NEW) ? Html::a('<span class="glyphicon glyphicon-ok"></span>',['/allocation-master/activate', 'id' =>(string)$model->_id],['title'=>'Activate']
                                     ):' ';
                                 },
 

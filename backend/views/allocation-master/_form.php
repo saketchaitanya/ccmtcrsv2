@@ -16,7 +16,22 @@ $acharyaList = AcharyaHelper::allAcharyaSelect2Input();
 ?>
 
 <div class="allocation-master-form">
-
+	<?php $session= \Yii::$app->session;
+        if ($session->hasFlash('errorActivating'))
+        {
+            $sessionFlash= $session->getFlash('errorActivating');
+        }        
+        if ($session->hasFlash('failedUpdate'))
+        {
+           $sessionFlash= $session->getFlash('failedUpdate');
+        }
+        if(isset($sessionFlash)):
+            echo  \yii\bootstrap\Alert::widget([
+                'options' => ['class' => 'alert-warning'],
+                'body' => $sessionFlash,
+            ]);
+        endif;
+        ?>
     <?php $form = ActiveForm::begin(); ?>
 
     <?php echo $form->field($model, 'activeDate')->widget(DatePicker::classname(), 
@@ -39,7 +54,7 @@ $acharyaList = AcharyaHelper::allAcharyaSelect2Input();
 				'pluginOptions' => 
 					[
 						'autoclose' => true,
-						'format' => 'dd-M-yyyy',
+						'format' => 'dd-mm-yyyy',
 					]
 	]);
 	?>

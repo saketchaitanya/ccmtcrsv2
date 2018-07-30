@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = 'Activate';
     <div class='panel panel-default'>
 	    <div class='panel-body'>	
 		    
-		    <?php $AllocationMaster = AllocationMaster::findOne(['status'=>AllocationMaster::STATUS_ACTIVE]) 
+		    <?php $alloc = AllocationMaster::findOne(['status'=>AllocationMaster::STATUS_ACTIVE]) 
 		     ?>
 		    <div class='alert alert-warning'>
 			    	<div>
@@ -34,19 +34,24 @@ $this->params['breadcrumbs'][] = 'Activate';
 			    	</div>
 		    	</div>
 		    <?php $form = ActiveForm::begin();?>
-			 
-		    <div class='row'>			   
-			    <div class='col-sm-12'>
-			    	<div class='h3'>Current Active Date is:
-			    	<span style='color:red'><?= $AllocationMaster->activeDate; ?></span>
-			    	The table below shows the allocations active from this date.
-			    	</div>
-			    </div>
-		    <div class='col-sm-2'>&nbsp;</div>
-			</div>
-		    <?=  $this->render('_rangeview',[
-       		 'model'=> $AllocationMaster,]); ?>
-		   
+			<?php if (isset($alloc)): ?>
+			    <div class='row'>			   
+				    <div class='col-sm-12'>
+				    	<div class='h3'>Current Active Date is:
+				    	<span style='color:red'><?= $alloc->activeDate; ?></span>
+				    	The table below shows the allocations active from this date.
+				    	</div>
+				    </div>
+			    <div class='col-sm-2'>&nbsp;</div>
+				</div>
+			    <?=  $this->render('_rangeview',[
+	       		 'model'=> $alloc,]); ?>
+		   <?php endif; ?>
+
+		   	  <?php if(isset($model->allocationDate))
+		   	  	echo Html::activeHiddenInput($model,'approvalDate');
+		   	  ?>
+
        		  <?php $model->status = AllocationMaster::STATUS_ACTIVE ?>
        		   <?= Html::activeHiddenInput($model,'status'); ?>
        		 </div>  

@@ -31,10 +31,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'model'=> $model,]);
 
     ?>
-    <?php  if ($model->status==AllocationMaster::STATUS_ACTIVE) { ?>
+    
     <p>
+    <?php  if ($model->status==AllocationMaster::STATUS_ACTIVE || $model->status==AllocationMaster::STATUS_NEW) { ?>
         <?= Html::a('Update', ['update', 'id' => (string)$model->_id], ['class' => 'btn btn-primary']) ?>
+     <?php }
+        if ($model->status==AllocationMaster::STATUS_NEW || $model->status==AllocationMaster::STATUS_INACTIVE) { ?>
+        <?= Html::a('Activate', ['activate', 'id' => (string)$model->_id], ['class' => 'btn btn-success'])?>
+     <?php  } 
+     ?>
         <?= Html::a('PDF', ['view-pdf', 'id' => (string)$model->_id], ['class' => 'btn btn-warning','target'=>'_blank']) ?>
+   
     </p> 
-    <?php } ?>
+    
     

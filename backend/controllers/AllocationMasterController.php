@@ -36,7 +36,14 @@ class AllocationMasterController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => AllocationMaster::find()->where(['status' => [AllocationMaster::STATUS_ACTIVE,AllocationMaster::STATUS_INACTIVE]]),
+            'query' => AllocationMaster::find()->where(
+                ['status' => 
+                    [
+                        AllocationMaster::STATUS_ACTIVE,
+                        AllocationMaster::STATUS_INACTIVE,
+                        AllocationMaster::STATUS_NEW
+                    ]
+                ]),
         ]);
 
         return $this->render('index', [
@@ -86,40 +93,49 @@ class AllocationMasterController extends Controller
     public function actionActivate($id)
     {
         $allocationbackup = AllocationMaster::findOne(['status'=>AllocationMaster::STATUS_ACTIVE]);
-       
+        
+
         $model = $this->findModel($id);
 
         //it is a first activation.
-         if(!isset($allocationbackup))
-        {
-
- 			$model->status = AllocationMaster::STATUS_ACTIVE;
-                $model->save();
-                if ($model->save()) {
-            return $this->redirect(['index']);
-            }
-        }
+        $success = true;
 
         if ($model->load(Yii::$app->request->post()))
         {
+             
+             if(strlen($model->approvalDate)==0):
+                $session=\Yii::$app->session;
+                $session->setFlash('errorActivating','Approval Date is required for activation.');
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            
+            else:
+                if(is_null($allocationbackup)):
+                    $model->status = AllocationMaster::STATUS_ACTIVE;
+                else:
+                    AllocationMaster::updateAll(['status'=>AllocationMaster::STATUS_INACTIVE],['status' =>[AllocationMaster::STATUS_ACTIVE,AllocationMaster::STATUS_INACTIVE]]);
+                    $model->status = AllocationMaster::STATUS_ACTIVE;
+                endif;  
+                    $model->save();  
+                    if ($model->save()): 
+                        return $this->redirect(['index']);
+                    else:
+                        $success=false;
+                    endif;
+            endif;
 
-                AllocationMaster::updateAll(['status'=>AllocationMaster::STATUS_INACTIVE]);
-                $model = $this->findModel($id);
-                $model->status = AllocationMaster::STATUS_ACTIVE;
-                $model->save();
-
-                if ($model->save()) {
-            return $this->redirect(['index']);
-            }
-            else
-            {
-                $allocationbackup->status = AllocationMaster::STATUS_ACTIVE;
-                $allocationbackup->save();
-                $session=Yii::$app->session;
-                $session->addFlash('errorActivating','Selected Allocation Master could not be activated. Please contact IT team');
-                return $this->redirect(['index']);
-            };
         }
+        if($success==false)
+        {
+           if (!is_null($allocationbackup)):
+            $allocationbackup->status = AllocationMaster::STATUS_ACTIVE;
+            $allocationbackup->save();
+           endif;
+            $session=\Yii::$app->session;
+            $session->setFlash('errorActivating','Selected Allocation Master could not be activated. Please contact IT team');
+            return $this->redirect(['index']);
+        };
         return $this->render('activate',['model'=>$model]);
     }
 
