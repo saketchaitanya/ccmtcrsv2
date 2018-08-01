@@ -184,36 +184,52 @@ class AllocationManager
 
 /* --- revised rates report ----- */
 
-	/*public static function getRevisedRatesData()
+	public static function getRevisedRatesData()
 	{
-		 $allocs = AllocationMaster::findAll(
+		 $allocs = AllocationMaster::find()
+	 				->where(
 		 				[
 		 					'status'=>
  							[
 	 							AllocationMaster::STATUS_ACTIVE,
 	 							AllocationMaster::STATUS_INACTIVE
 	 						]
-	 					]);
+	 					])
+		 			->orderBy('displaySeq',SORT_ASC)
+		 			->all();
 		 
-		 $aTable = array();
+		$activeAlloc = AllocationMaster::findOne(['status'=> AllocationMaster::STATUS_ACTIVE]);
+	 	
+	 	$rangeArray = $activeAlloc->rangeArray;
 
-		 foreach ($allocs as $alloc)
-		 {
-		 	if($alloc->status == AllocationMaster::STATUS_ACTIVE)
-		 	{
-		 		$aTable[] = $alloc->startMarks;
-		 	}
-		 }
+	 	ArrayHelper::multisort($rangeArray, ['srNo'], [SORT_ASC]);
 
-		 for ($i=0; $i<sizeof($aTable); $i++)
-		 {
-		 	foreach ($allocs as $alloc)
-		 	{
-		 		if ($model->startMarks == $aTable[$i])
-		 			
-		 	}
+	 	$stMarks = ArrayHelper::getColumn($rangeArray,'startMarks');
+	 	$marksRange = array();
+	 	$rates = array();
+	 	for($i=0; $i<sizeof($stMarks); $i++)
+	 	{
+	 		$marksRange[$i]=$rangeArray[$i]['startMarks'] . '-' . $rangeArray[$i]['endMarks'];
+	 		$j = 0;
+	 		foreach ($allocs as $alloc)
+	 		{
+	 			$rArr = $alloc->rangeArray;
+	 			$sm=ArrayHelper::map($rArr,'startMarks','Rates');
+	 			if (array_key_exists($stMarks[$i],$sm)):
+	 				$rates[$i][$j]=(int)$sm[$stMarks[$i]];
+	 			else:
+	 			$rates[$i][$j]=0;
+	 			endif;	
+	 			$j++;
+	 		}
 
-		 }
+	 	}				
+		return [
+					'models'=>$allocs, 
+					'startMarks'=>$stMarks,
+					'marks'=>$marksRange, 
+					'rates'=>$rates
+				];
 
-	}	*/	
+	}		
 }//class ends

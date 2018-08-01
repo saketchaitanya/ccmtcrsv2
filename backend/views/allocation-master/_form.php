@@ -67,8 +67,20 @@ $acharyaList = AcharyaHelper::allAcharyaSelect2Input();
                 ],
             ]);
 	?>
-   <!--  <?= $form->field($model, 'status') ?> -->
-
+	<?= $form->field($model,'displaySeq')->widget(TouchSpin::class,
+		[
+			'options' => 
+            [
+                'placeholder' => 'Sequence Number while displaying in revised rate evaluation report',
+            ],
+        	'pluginOptions'=>
+            [
+                'min' => 1,
+                'step'=> 1,
+                'max' => 100,
+			]
+		]);
+	?>
    <div class='well'>
 	<?= $form->field($model, 'rangeArray')->widget(MultipleInput::className(),[
 			'max'=>20,
@@ -139,8 +151,8 @@ $acharyaList = AcharyaHelper::allAcharyaSelect2Input();
 						        		'initval' => 0,
 								        'min' => 0,
 								        'max' => 2000000,
-								        'step' => 100,								       
-								        'boostat' => 100,
+								        'step' => 500,								       
+								        'boostat' => 1000,
 								        'maxboostedstep' => 1000,
 								        'prefix'=>'₹',
 							        ],

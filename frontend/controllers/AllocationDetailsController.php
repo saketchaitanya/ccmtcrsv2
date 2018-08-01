@@ -344,9 +344,28 @@ class AllocationDetailsController extends Controller
 
  public function actionRevisedratesreport()
  {
+    $res = AllocationManager::getRevisedRatesData();
+    return $this->render('revised-rates-report',['res' => $res]);
 
-    return $this->render('revised-rates-report');
+ } 
+ /**
+ * PDF of Revised Rates for Evaluation Report
+ */
 
+ public function actionPdfRevisedratesreport()
+ {
+    $res = AllocationManager::getRevisedRatesData();
+    $contents= $this->renderAjax('pdf-revised-rates-report',['res' => $res]);
+    $pdf = Yii::$app->pdf;
+
+    $pdf->generatePdf( 
+                        $contents,
+                        null,
+                        'Revised Rates Report for Evaluation of Questionnaire Reports',
+                        '|Page {PAGENO}|'.' '.\Yii::$app->name,
+                        [
+                            'orientation'=>\kartik\mpdf\Pdf::ORIENT_LANDSCAPE
+                        ]);
  } 
 
     /**

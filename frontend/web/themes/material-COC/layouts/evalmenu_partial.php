@@ -197,7 +197,7 @@
   	                              	],
   	                              	'<li class="divider"></li>',
   	                              	[ 
-  	                              		'label'=>'Regionwise Payment', 'url'=> ['/eval/regionwisepayment']
+  	                              		'label'=>'Revised Rates Report', 'url'=> ['/allocation-details/revisedratesreport']
   	                              	],
   	                              	'<li class="divider"></li>',
   	                              	[ 

@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'activeDate',
             'approvedBy',
             'approvalDate',
+            'displaySeq',
             'status',
         ],
     ]); 

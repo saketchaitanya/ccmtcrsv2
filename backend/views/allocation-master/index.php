@@ -49,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'activeDate',
             'approvedBy',
             'approvalDate',
+            'displaySeq',
             'status',
 
             ['class' => 'yii\grid\ActionColumn',
@@ -75,7 +76,17 @@ $this->params['breadcrumbs'][] = $this->title;
                                 function($url,$model,$key)
                                 {
                                      //$url = '/allocation-master/markdelete?id='.$key;
-                                     return $model->status == AllocationMaster::STATUS_ACTIVE ? ' ': Html::a('<span class="glyphicon glyphicon-trash"></span>', ['/allocation-master/markdelete','id'=>(string)$model->_id],['title' => 'Delete']);
+                                     return $model->status == AllocationMaster::STATUS_ACTIVE ? ' ': Html::a('<span class="glyphicon glyphicon-trash"></span>', ['/allocation-master/markdelete','id'=>(string)$model->_id],
+                                        [
+                                            'title' => 'Delete',
+                                            'data' => 
+                                            [
+                                                'confirm' => Yii::t('yii','Are you sure you want to delete this item?'),
+                                                'title' => Yii::t('yii', 'Confirm?'),
+                                                'ok' => Yii::t('yii', 'Confirm'),
+                                                'cancel' => Yii::t('yii', 'Cancel'),
+                                            ]
+                                        ]);
                                 }
                             ],
                 

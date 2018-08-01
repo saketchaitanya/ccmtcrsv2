@@ -19,6 +19,7 @@ use common\models\AllocationMaster;
             'activeDate',
             'approvedBy',
             'approvalDate',
+            'displaySeq',
             'status',
         ],
     ]); 
