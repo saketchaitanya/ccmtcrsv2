@@ -123,7 +123,7 @@ class QueSummaryController extends \yii\web\Controller
       $endDate = $year->yearEndDate;
       $forYear = substr($startDate,-4).' - '.substr($endDate,-4);
     
-    $summ = QueSummary::find()
+        $summ = QueSummary::find()
         ->where(['yearID'=>$yearId,'centreID'=>$centreId])
         ->all();
 

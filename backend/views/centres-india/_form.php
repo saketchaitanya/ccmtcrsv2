@@ -63,6 +63,7 @@ use yii\db\Query;
         }?> 
         <?= $form->field($model, 'desc') ?>
         <?= $form->field($model, 'code') ?>
+        <?= $form->field($model, 'CMCNo') ?>
         <?= $form->field($model, 'fileNo') ?>
         <?= $form->field($model, 'phone') ?>
         <?= $form->field($model, 'fax') ?>

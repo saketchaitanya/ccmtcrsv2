@@ -201,7 +201,7 @@
   	                              	],
   	                              	'<li class="divider"></li>',
   	                              	[ 
-  	                              		'label'=>'Min-Max till date', 'url'=> ['/eval/minmax']
+  	                              		'label'=>'Regional Heads Report', 'url'=> ['/allocation-details/regionalheadreport']
   	                              	],
   	                              	'<li class="divider"></li>',
   	                              	[ 

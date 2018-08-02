@@ -43,13 +43,13 @@ use kartik\widgets\DepDrop;
 		
 		<div class="panel-body">
 			<div class='well well-sm'>
-				NOTE: Please Generate Allocations from <a href='/allocation-details/generate-allocations' target='_blank' style='color:green'>Reports->Generate Allocations</a> before 
+				NOTE: Please Generate Allocations from <a href='/que-summary/index' target='_blank' style='color:green'>Reports->Generate Allocations</a> before 
 				generating report for latest data.
 		   	</div>
 		  	<hr />
 			<form id='summary-report-form' name='summary-report-form' action='allocation-details/fetchsummaryreport' method='post' target="_blank" >
 				<div class='row'>
-					<div class='col-xs-12, col-md-8'>
+					<div class='col-xs-12 col-md-8'>
 				   		<?php
 				            echo Select2::widget([
 				            'name' => 'refYear',
@@ -65,7 +65,7 @@ use kartik\widgets\DepDrop;
 					</div>
 					 <input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>"
            				value="<?=Yii::$app->request->csrfToken?>"/>
-			   		<div class='col-xs-6, col-md-2'>
+			   		<div class='col-xs-6 col-md-2'>
 						<?php 
 		 					echo Html::Button('Generate Report',
 							[
@@ -75,7 +75,7 @@ use kartik\widgets\DepDrop;
 								]);
 						?>
 		 		    </div>
-		 			<div class='col-xs-6, col-md-2'>		
+		 			<div class='col-xs-6 col-md-2'>		
 					 	<button type="submit" class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('allocation-details/summaryreportpdf')?>" target="_blank" >GeneratePdf</button>
 					</div>
 				</div>

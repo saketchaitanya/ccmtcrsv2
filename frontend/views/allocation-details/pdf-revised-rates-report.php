@@ -33,7 +33,7 @@ if (class_exists('yii\debug\Module'))
                             Rates approved by:
                             <?= $model->approvedBy ?>
                             on <?= $model->approvalDate ?><br/>
-                            (Amount in Rupees )
+                            (Amount in Rupees)
                         </th>
                     <?php endforeach; ?>
                 </tr> 

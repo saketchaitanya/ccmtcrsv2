@@ -79,6 +79,16 @@ class RegionMaster extends \yii\mongodb\ActiveRecord
         ];
     }
 
+
+    /** 
+     * Locks the regioncode when a new centre is added in the region
+     * by the centre master. When centre is deleted, a check is made 
+     * if there is a centre existing still under that region. If not
+     * then the centre is unlocked.
+     * @param string $regionCode unique code entered by the user to identify region
+     * @param object/string $id mongoid of the region record
+     * @param boolean $flag if true, the record is to be locked & if false, record is to be unlocked 
+     */
     public static function lockUnlock($regionCode=null, $id=null, $flag=true)
     {
         if(is_null($id) && is_null($regionCode))

@@ -9,9 +9,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\mongodb\Query;
+use yii\web\BadRequestHttpException;
 use common\models\WpLocation;
 use common\models\CurrentYear;
 use common\models\Centres;
+use common\models\RegionMaster;
 use common\components\reports\AllocationManager;
 use common\components\reports\ReportQueryManager;
 /**
@@ -186,7 +188,7 @@ class AllocationDetailsController extends Controller
                 $response->statusCode = 200;
                 return $this->renderPartial('alloc-sum-status',['response'=>$response]);
             else:
-                throw new \yii\web\BadRequestHttpException;
+                throw new BadRequestHttpException;
             endif;
 
         else:
@@ -243,7 +245,7 @@ class AllocationDetailsController extends Controller
 
     public function actionUpdateCentreAllocations()
     {
-        $currYear = CurrentYear::getCurrentYear();
+       /* $currYear = CurrentYear::getCurrentYear();
         $data = ReportQueryManager::getMonthwiseMarksData((string)$currYear->_id);
         $centreData = $data['centreData'];
         $centreIds = array_keys($centreData);
@@ -253,11 +255,10 @@ class AllocationDetailsController extends Controller
             ->where(['yearId' =>(string)$currYear->_id])
             ->andWhere(['wpLocCode' =>(int)$id])
             ->one();
-            /*$name = Centres::getCentreName($id);*/
             $allocArray[$id]=$alloc;
         endforeach;
-        
         return $this->render('centre-allocation-update',['model'=>$allocArray]);
+    */
     }
 
     /** 
@@ -285,7 +286,7 @@ class AllocationDetailsController extends Controller
            /*return  $this->renderAjax('gen-sum-status',['response'=>$response]); *///not used as it is slower than renderPartial.
            return $this->renderPartial('_ajax-summary-report',['response'=>$response]);
         else:
-         throw new \yii\web\BadRequestHttpException;
+         throw new BadRequestHttpException;
         endif;
     }
 
@@ -321,11 +322,11 @@ class AllocationDetailsController extends Controller
       if(strlen($post['refYear'])>0):
           $model=self::getSummaryReportModel();
       else:
-        throw new \yii\web\BadRequestHttpException('Year should be selected for generating pdf');
+        throw new BadRequestHttpException('Year should be selected for generating pdf');
       endif;
 
      $response = \Yii::$app->response;
-      $response->format = \yii\web\Response::FORMAT_RAW;
+     $response->format = \yii\web\Response::FORMAT_RAW;
      $response->data = json_encode($model);
      $response->statusCode = 200;
           
@@ -337,6 +338,35 @@ class AllocationDetailsController extends Controller
         //generates a pdf in the browser window
       $pdf = Yii::$app->pdf->generatePdf($contents,null,'Summary of Questionnaire Evaluations','|Page {PAGENO}|'.' '.\Yii::$app->name.'<br/>'.date("d-M-Y h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_PORTRAIT]);
     }
+
+
+/**
+ * Approval report for Regional heads
+ */
+     public function actionRegionalheadreport()
+    {
+        //$res = AllocationManager::getRevisedRatesData();
+        return $this->render('approval-report-regional-heads');
+    } 
+
+    public function actionFetchRegionalheadreport()
+    {
+         $post =\Yii::$app->request->post();
+        if(\Yii::$app->request->isAjax):
+            $response = \Yii::$app->response;
+            $model = AllocationManager::getRegionAllocationData($post['year1'],$post['year2'],$post['region']);
+            $reg = RegionMaster::findOne(['regionCode'=>$post['region']]);
+            $model['region']= [$post['region'], $reg->name];
+          //  $response->format = \yii\web\Response::FORMAT_JSON;
+            $response->data = $model;
+            $response->statusCode = 200;
+           return $this->renderPartial('_ajax-approval-report',['response'=>$response]);
+        else:
+            throw new BadRequestHttpException;
+        endif;
+    } 
+
+
 
 /**
  * Revised Rates for Evaluation Report
