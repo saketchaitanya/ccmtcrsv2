@@ -243,9 +243,11 @@ class AllocationDetailsController extends Controller
         return $this->redirect(['index']);
     }*/
 
+    /*
+    //action for report not used...
     public function actionUpdateCentreAllocations()
     {
-       /* $currYear = CurrentYear::getCurrentYear();
+        $currYear = CurrentYear::getCurrentYear();
         $data = ReportQueryManager::getMonthwiseMarksData((string)$currYear->_id);
         $centreData = $data['centreData'];
         $centreIds = array_keys($centreData);
@@ -258,9 +260,10 @@ class AllocationDetailsController extends Controller
             $allocArray[$id]=$alloc;
         endforeach;
         return $this->render('centre-allocation-update',['model'=>$allocArray]);
-    */
-    }
+    
+    }*/
 
+/* ---------------- Summary Report ------------*/
     /** 
      * Summary Report
      */
@@ -340,12 +343,13 @@ class AllocationDetailsController extends Controller
     }
 
 
+/* ---------------- Approval report for Regional heads------------*/
+
 /**
  * Approval report for Regional heads
  */
      public function actionRegionalheadreport()
     {
-        //$res = AllocationManager::getRevisedRatesData();
         return $this->render('approval-report-regional-heads');
     } 
 
@@ -365,8 +369,36 @@ class AllocationDetailsController extends Controller
             throw new BadRequestHttpException;
         endif;
     } 
+    public function actionRegionalheadreportpdf() 
+   {
 
+      $post =\Yii::$app->request->post();
+      
+      // get your HTML raw content without any layouts or scripts
+      if(!strlen($post['year1'])>0):
+        throw new BadRequestHttpException('Reference Year should be selected for generating pdf');
+      endif;
+      if(!strlen($post['region'])>0):
+        throw new BadRequestHttpException('Region should be selected for generating pdf');
+      endif;
+     $model = AllocationManager::getRegionAllocationData($post['year1'],$post['year2'],$post['region']);
+            $reg = RegionMaster::findOne(['regionCode'=>$post['region']]);
+            $model['region']= [$post['region'], $reg->name];
+     $response = \Yii::$app->response;
+     $response->format = \yii\web\Response::FORMAT_RAW;
+     $response->data = $model;
+     $response->statusCode = 200;
+          
+      $contents = $this->renderPartial(
+                'pdf-approval-report',[
+                        'response' => $response,
+                    ]);
+      $content = serialize($contents);
+        //generates a pdf in the browser window
+      $pdf = Yii::$app->pdf->generatePdf($contents,null,'Approval report for regional heads','|Page {PAGENO}|'.' '.\Yii::$app->name.'<br/>'.date("d-M-Y h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_PORTRAIT]);
+    }
 
+/* ---------------- Revised Rates for Evaluation Report ------------*/
 
 /**
  * Revised Rates for Evaluation Report
@@ -397,6 +429,118 @@ class AllocationDetailsController extends Controller
                             'orientation'=>\kartik\mpdf\Pdf::ORIENT_LANDSCAPE
                         ]);
  } 
+
+
+/* ---------------- statewise evaluation report ------------*/
+   
+    /**
+     * Displays statewise evaluation report's base query form
+     */
+    public function actionStatewiseevaluation()
+    {
+     //$data = AllocationManager::getAllocationStatewise('5b1195f8b292c9de0d8b4567');
+     //\Yii::$app->yiidump->dump($data);
+     
+    /* exit();*/
+        return $this->render('statewise-evaluation-report');
+    }
+
+
+    /**
+     * Generates ajax report data for statewise evaluation report and populates the view
+     */
+
+    public function actionFetchstatewiseevaluation()
+    {
+        
+        $model = self::getStatewiseReportModel();
+        if (\Yii::$app->request->isAjax):
+            $response = \Yii::$app->response;
+          //  $response->format = \yii\web\Response::FORMAT_JSON;
+            $response->data = $model;
+            $response->statusCode = 200;
+           return $this->renderPartial('_ajax-statewise-evaluation-report',['response'=>$response]);
+        else:
+         throw new \yii\web\BadRequestHttpException;
+        endif;
+    }
+
+    /**
+     * Generates data based on post values for monthwise report model report
+     */
+    private static function getStatewiseReportModel()
+    {
+        $post = \Yii::$app->request->post();
+        $yearId1= $post['refYear1'];
+        $year1 = \common\models\CurrentYear::findOne(['_id'=>$yearId1]);
+        $startDate1 = $year1->yearStartDate;
+        $endDate1 = $year1->yearEndDate;
+        $forYear1 = substr($startDate1,-4).' - '.substr($endDate1,-4);
+        $data = ReportQueryManager::getMonthwiseMarksData($yearId1);
+        $allocdata1 = AllocationManager::getAllocationStatewise($yearId1);
+        $centreCities = AllocationManager::getCentreCities($data['keys']);
+        if(!empty($post['refYear2'])):
+            $yearId2= $post['refYear2'];
+            $year2 = \common\models\CurrentYear::findOne(['_id'=>$yearId2]);
+            $startDate2 = $year2->yearStartDate;
+            $endDate2 = $year2->yearEndDate;
+            $forYear2 = substr($startDate2,-4).' - '.substr($endDate2,-4);
+
+            $allocdata2 = AllocationManager::getAllocationStatewise($yearId2);
+            $model = [  
+                        'centreData'=>$data['centreData'],
+                        'marksData'=>$data['marksData'],
+                        'totalMarks'=>$data['totalMarks'],
+                        'centreCodes'=>$data['keys'],
+                        'centreCities'=>$centreCities,
+                        'forYear1'=>$forYear1,
+                        'forYear2'=>$forYear2,
+                        'allocations1'=>$allocdata1['allocations'],
+                        'totalStates1'=>$allocdata1['totalStates'],
+                        'allocations2'=>$allocdata2['allocations'],
+                        'totalStates2'=>$allocdata2['totalStates'],
+                  ];
+        else:
+           $model = [  
+                        'centreData'=>$data['centreData'],
+                        'marksData'=>$data['marksData'],
+                        'totalMarks'=>$data['totalMarks'],
+                        'centreCodes'=>$data['keys'],
+                        'centreCities'=>$centreCities,
+                        'forYear1'=>$forYear1,
+                        'allocations1'=>$allocdata1['allocations'],
+                        'totalStates1'=>$allocdata1['totalStates'],
+                  ]; 
+        endif; 
+        return $model;
+
+    }
+
+     public function actionStatewiseevaluationpdf() 
+   {
+
+        $post =\Yii::$app->request->post();
+
+        // get your HTML raw content without any layouts or scripts
+        if(strlen($post['refYear1'])>0):
+            $model=self::getStatewiseReportModel();
+        else:
+            throw new \yii\web\BadRequestHttpException('Year should be selected for generating pdf');
+        endif;
+
+        $response = \Yii::$app->response;
+        // $response->format = \yii\web\Response::FORMAT_JSON;
+        $response->data = $model;
+        $response->statusCode = 200;
+          
+        $contents = $this->renderAjax(
+                'pdf-statewise-evaluation-report',[
+                        'response' => $response,
+                    ]);
+      $content = serialize($contents);
+        //generates a pdf in the browser window
+      $pdf = Yii::$app->pdf->generatePdf($contents,null,'Statewise Evaluation Report','|Page {PAGENO}|'.' '.\Yii::$app->name.':'.date("d-M-Y:h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_LANDSCAPE]);
+    }
 
     /**
      * Finds the AllocationDetails model based on its primary key value.

@@ -15,7 +15,7 @@ use kartik\widgets\DepDrop;
 	
 	
 
-	$this->title = 'Activities at a Glance' ;
+	$this->title = 'Report: Activities at a Glance' ;
 	$this->params['breadcrumbs'][] = $this->title;
 	$yearData = ReportQueryManager::getActivitiesListData()['years'];
 
@@ -56,7 +56,7 @@ use kartik\widgets\DepDrop;
 ?>
 <div class="questionnaire-index">
 	
-	<div class= "panel panel-default">
+	<div class= "panel panel-info">
 
 		<div class='panel-heading' align='center'>
 			<h3><?= $this->title ?></h3>
@@ -137,8 +137,30 @@ use kartik\widgets\DepDrop;
 <script>
 	function send()
 		 {
+			//validate before starting ajax
+			validate();
+			function validate()
+			{
+				var yearselect = $("#year-select").val();
+				var centreselect = $("#centre-select").val();
+				if (yearselect=='')
+				{
+					alert('Selecting Year is mandatory');
+				    $('#select2-year-select-container').focus();
+				    throw new Error('Selecting Year is mandatory');
+			    }
+				if (centreselect=='')
+				{	
+					alert('Selecting Centre is mandatory');
+				    $('#select2-centre-select-container').focus();
+				    throw new Error('Selecting centre is mandatory');
+				}
+
+			}
+		   //show loader
 		   $('#loader').show();
 
+		   //execute ajax
 		   var data=$("#activities-at-a-glance-form").serialize();
 		  $.ajax({
 		   	type: 'POST',

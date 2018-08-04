@@ -126,7 +126,7 @@ return
                     // ...
             'formatters' => 
             [
-               /* \yii\web\Response::FORMAT_JSON => 
+                /*\yii\web\Response::FORMAT_JSON => 
                 [
                     'class' => 'yii\web\JsonResponseFormatter',
                     //'prettyPrint' => YII_DEBUG, // use "pretty" output in debug mode
@@ -136,10 +136,18 @@ return
             ],
         ], 
 
+        'formatter' =>
+        [   
+            'class' =>'yii\i18n\Formatter',
+
+            'dateFormat'=>'dd-MM-yyyy',
+            'decimalSeparator' => '.',
+            'thousandSeparator' => ',',
+            'currencyCode' => 'INR',
+        ],
 
 
-
-        ], 
+    ], //components closing bracket
 
 
 ];

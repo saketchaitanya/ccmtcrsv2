@@ -184,6 +184,46 @@ class AllocationManager
 		return $res;
 	}
 
+/* ---  Statewise Evaluation Report --*/
+	public static function getAllocationStatewise($yearId)
+	{
+		$year = CurrentYear::findOne(['id'=>$yearId]);
+			$data = AllocationDetails::find()
+						->where(['yearId'=>$yearId])
+						->asArray()
+						->all();
+		$allocdata= ArrayHelper::map($data,'wpLocCode','allocation');
+
+		array_walk($allocdata, function(&$val)
+				{
+					 $val = (int)$val;
+					 return $val;
+				});
+
+		//$centrows = (new Query())->select(['stateCode','wpLocCode','_id'=>false])->from('centres')->all();
+		$allocStates = ArrayHelper::index($data, null, 'stateCode');
+		$totalStates = array();
+		foreach ($allocStates as $key=>$value)
+			{
+				$stateName= StatesHelper::getStateForCode($key);
+				$totalStates[$key]['stateName'] = $stateName;
+				$total=0;
+				for($i=0; $i<sizeof($value); $i++):
+					$total=$total+(int)$value[$i]['allocation'];
+				endfor;
+				$totalStates[$key]['allocation']=$total;
+			}
+		/*foreach ($allocStates as $key=>$value):
+			$stateName= StatesHelper::getStateForCode($key);
+			$states[$key]= $stateName;
+		endforeach;*/
+		/*$centres= ArrayHelper::index($centrows,'wpLocCode');*/
+
+
+		return ['allocations'=>$allocdata, 'totalStates'=>$totalStates];
+					
+	}
+
 
 /* -- Regional Heads Approval Report -- */
 	public static function getRegionAllocationData($yearId1,$yearId2 = null,$region)
@@ -195,7 +235,6 @@ class AllocationManager
 						->andWhere(['region'=>$region])
 						->asArray()
 						->all();
-			
 			
 			//get data for each centre
 			$allocCent1 = array();
@@ -368,5 +407,19 @@ class AllocationManager
 					'rates'=>$rates
 				];
 
-	}		
+	}
+
+	/**
+	 * useful for getting array of centre cities for centres
+	 * @param $centreCodes indexed array of centre codes as integers (wpLocCode)
+	 */
+	public static function getCentreCities($centreCodes)
+	{
+
+		$centrerows = WpLocation::find()->where(['id'=>$centreCodes])->asArray()->all();
+		$centreCities = ArrayHelper::map($centrerows,'id','city');
+		return $centreCities;
+
+	}
+
 }//class ends

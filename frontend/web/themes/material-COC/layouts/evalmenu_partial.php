@@ -205,7 +205,7 @@
   	                              	],
   	                              	'<li class="divider"></li>',
   	                              	[ 
-  	                              		'label'=>'Min-max - 6months', 'url'=> ['/eval/minmaxsixmonths']
+  	                              		'label'=>'Statewise Evaluation Report', 'url'=> ['/allocation-details/statewiseevaluation']
   	                              	],
   	                    		  ]
                       		  ]

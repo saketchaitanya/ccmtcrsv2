@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 	
-	$this->title = 'Activities at a Glance' ;
+	$this->title = 'Report: For Approval by Regional Heads' ;
 	$this->params['breadcrumbs'][] = $this->title;
 
 	$q = new Query();
@@ -46,30 +46,11 @@ use yii\helpers\ArrayHelper;
 		$regionData[$regions[$i]]= $regMaster['name'];
 	}
 
-	//var_dump($regionData);
 
-	
-	
-	//prepare data for hidden field centre-id
-	//$regionData = ReportQueryManager::getActivitiesListData()['centres'];
-	/*if(sizeof($regionData)>0):
-		$regionKeys = array_keys($regionData);
-		$regionVals = array_values($regionData);
-		$rk =  Json::encode($regionKeys);
-		$rv =  Json::encode($regionVals);
-	else:
-		$regionData[0]='';
-		$regionKeys[0]='';
-		$regionVals[0]='';
-		$rk =  Json::encode($regionKeys);
-		$rv =  Json::encode($regionVals);
-	endif;*/
-
-	
 ?>
 <div class="questionnaire-index">
 	
-	<div class= "panel panel-default">
+	<div class= "panel panel-info">
 
 		<div class='panel-heading' align='center'>
 			<h3><?= $this->title ?></h3>
@@ -148,10 +129,11 @@ use yii\helpers\ArrayHelper;
 										[
 											'onClick'=>'send();',
 											'class' => 'loadRepContent btn btn-success',
+											'id'=>'generateBtn',
 		 									//'value'=> Yii::$app->urlManager->createAbsoluteUrl("allocation-details/fetch-approvalreport"),
 		 								]);
 								?>
-						 		<button type="submit" class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('allocation-details/pdf-regionalheadreport')?>" >Generate Pdf</button>
+						 		<button type="submit" id='generatePdf' class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('allocation-details/regionalheadreportpdf')?>" >Generate Pdf</button>
 							</div>
 						</div>
 					</div>
@@ -168,8 +150,30 @@ use yii\helpers\ArrayHelper;
 <script>
 	function send()
 		 {
+		 	//validate before starting ajax
+			validate();
+			function validate()
+			{
+				var year1select = $("#year1-select").val();
+				var regionselect = $("#region-select").val();
+				if (year1select=='')
+				{
+					alert('Selecting Reference Year is mandatory');
+				    $('#select2-year1-select-container').focus();
+				    throw new Error('Selecting Year1 is mandatory');
+			    }
+				if (regionselect=='')
+				{	
+					alert('Selecting Region is mandatory');
+				    $('#select2-region-select-container').focus();
+				    throw new Error('Selecting region is mandatory');
+				}
+
+			}
+		   //show loader
 		   $('#loader').show();
 
+		   //execute ajax
 		   var data=$("#approval-report-form").serialize();
 		  $.ajax({
 		   	type: 'POST',
@@ -204,7 +208,11 @@ use yii\helpers\ArrayHelper;
 				});",
 		\yii\web\View::POS_END,
 		'approvalreport-handler'
-	);
-?>
+	);?>
 
+<?php $this->registerCss(" 
+						  thead, tfoot { background-color: #F5F5F5; font-weight:bold;}
+						  thead {border-top:2px solid gray}
+						  tfoot {border-bottom:2px solid gray; border-top:2px double gray}
+						");	?>
 
