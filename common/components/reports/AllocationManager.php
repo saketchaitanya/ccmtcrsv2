@@ -373,7 +373,8 @@ class AllocationManager
 	 					])
 		 			->orderBy('displaySeq',SORT_ASC)
 		 			->all();
-		 
+		
+		
 		$activeAlloc = AllocationMaster::findOne(['status'=> AllocationMaster::STATUS_ACTIVE]);
 	 	
 	 	$rangeArray = $activeAlloc->rangeArray;

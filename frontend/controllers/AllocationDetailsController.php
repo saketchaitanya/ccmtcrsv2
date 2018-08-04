@@ -355,17 +355,15 @@ class AllocationDetailsController extends Controller
 
     public function actionFetchRegionalheadreport()
     {
-         $post =\Yii::$app->request->post();
-        if(\Yii::$app->request->isAjax):
-            $response = \Yii::$app->response;
-            $model = AllocationManager::getRegionAllocationData($post['year1'],$post['year2'],$post['region']);
-            $reg = RegionMaster::findOne(['regionCode'=>$post['region']]);
-            $model['region']= [$post['region'], $reg->name];
+          if(\Yii::$app->request->isAjax):
+          $response = \Yii::$app->response;
+          $response->data = self::getRegionalheadreportModel();
+
           //  $response->format = \yii\web\Response::FORMAT_JSON;
-            $response->data = $model;
+            //$response->data = $res;
             $response->statusCode = 200;
            return $this->renderPartial('_ajax-approval-report',['response'=>$response]);
-        else:
+         else:
             throw new BadRequestHttpException;
         endif;
     } 
@@ -373,7 +371,6 @@ class AllocationDetailsController extends Controller
    {
 
       $post =\Yii::$app->request->post();
-      
       // get your HTML raw content without any layouts or scripts
       if(!strlen($post['year1'])>0):
         throw new BadRequestHttpException('Reference Year should be selected for generating pdf');
@@ -381,9 +378,7 @@ class AllocationDetailsController extends Controller
       if(!strlen($post['region'])>0):
         throw new BadRequestHttpException('Region should be selected for generating pdf');
       endif;
-     $model = AllocationManager::getRegionAllocationData($post['year1'],$post['year2'],$post['region']);
-            $reg = RegionMaster::findOne(['regionCode'=>$post['region']]);
-            $model['region']= [$post['region'], $reg->name];
+     $model = self::getRegionalheadreportModel();
      $response = \Yii::$app->response;
      $response->format = \yii\web\Response::FORMAT_RAW;
      $response->data = $model;
@@ -396,6 +391,19 @@ class AllocationDetailsController extends Controller
       $content = serialize($contents);
         //generates a pdf in the browser window
       $pdf = Yii::$app->pdf->generatePdf($contents,null,'Approval report for regional heads','|Page {PAGENO}|'.' '.\Yii::$app->name.'<br/>'.date("d-M-Y h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_PORTRAIT]);
+    }
+
+    private static function getRegionalheadreportModel()
+    {
+          $post =\Yii::$app->request->post();
+            $model = AllocationManager::getRegionAllocationData($post['year1'],$post['year2'],$post['region']);
+            $centreCodes = array_keys($model['allCentreCodes']);
+            $centreCities = AllocationManager::getCentreCities($centreCodes);
+            $reg = RegionMaster::findOne(['regionCode'=>$post['region']]);
+            $model['region']= [$post['region'], $reg->name];
+            $model['centreCities']=$centreCities;
+            return $model;
+         
     }
 
 /* ---------------- Revised Rates for Evaluation Report ------------*/
@@ -438,10 +446,6 @@ class AllocationDetailsController extends Controller
      */
     public function actionStatewiseevaluation()
     {
-     //$data = AllocationManager::getAllocationStatewise('5b1195f8b292c9de0d8b4567');
-     //\Yii::$app->yiidump->dump($data);
-     
-    /* exit();*/
         return $this->render('statewise-evaluation-report');
     }
 

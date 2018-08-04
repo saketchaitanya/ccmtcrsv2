@@ -10,6 +10,7 @@
 
 		$allCentreCodes = $data['allCentreCodes'];
 		$region = $data['region'];
+		$cities = $data['centreCities'];
 		$allocations1 = $data['allocations1']; 
 		$statestotal1 = $data['statestotal1'];
 		$regtotal1 = $data['regtotal1'];
@@ -40,9 +41,9 @@
 					<th> Computer Code</th>
 					<th> Centre </th>
 					<th> City/Town</th>
-					<th><?= $year1 ?> </th>
+					<th><?= $year1 ?> (in Rupees) </th>
 					<?php if(!empty($year2)):?>
-					<th><?php echo $year2 ?> </th>
+					<th><?php echo $year2 ?> (in Rupees) </th>
 					<?php endif; ?>					
 				</tr>
 			</thead>
@@ -53,10 +54,10 @@
 					
 					<td><strong> Total Amount for <?= $region[1] ?> Region</strong></td>
 					<td></td>
-					<td align='right'><strong><?= $regtotal1 ?></strong></td> 
+					<td align='right'><strong><?= \Yii::$app->formatter->asDecimal($regtotal1 )?></strong></td> 
 					<?php if(isset($regtotal2)): ?>
 						<td align='right'><strong>
-							<?php echo $regtotal2 ?></strong>
+							<?php echo \Yii::$app->formatter->asDecimal($regtotal2)?></strong>
 						</td> 
 					<?php endif; ?>
 				</tr>
@@ -84,12 +85,12 @@
 							<td><?php if(isset($ctValue['CMCNo'])) echo $ctValue['CMCNo']; ?> 
 							</td>
 							<td><?= $ctValue['name']?> </td>
-							<td></td>
+							<td><?php if(isset($cities[$ctkey])) echo $cities[$ctkey];?></td>
 							<td align='right'><?php 
 									$arr = $allocations1[$stValue];
 									for ($i=0; $i<sizeof($arr); $i++):
 										if($arr[$i]['wpLocCode']==$ctValue['wpLocCode']):
-											echo $arr[$i]['allocation'];
+											echo \Yii::$app->formatter->asDecimal($arr[$i]['allocation']);
 										endif;
 									endfor; ?>		
 							</td>
@@ -98,7 +99,7 @@
 								<?php	$arr1 = $allocations2[$stValue];
 									for ($i=0; $i<sizeof($arr); $i++):
 										if($arr1[$i]['wpLocCode']==$ctValue['wpLocCode']):
-											echo $arr1[$i]['allocation'];
+											echo \Yii::$app->formatter->asDecimal($arr1[$i]['allocation']);
 										endif;
 									endfor;
 								?>
@@ -113,11 +114,11 @@
 					 	<td></td>	
 						<td><strong>Total Amount for <?= $statestotal1[$stValue]['stateName'] ?></strong></td>
 						<td></td>
-						<td align='right'><strong><?= $statestotal1[$stValue]['allocation'] ?></strong></td>
+						<td align='right'><strong><?= \Yii::$app->formatter->asDecimal($statestotal1[$stValue]['allocation']) ?></strong></td>
 						
 						<?php if(isset($statestotal2[$stValue]['allocation'])): ?>
 							<td align='right'><strong>		
-								<?php echo $statestotal2[$stValue]['allocation'] ?>
+								<?php echo \Yii::$app->formatter->asDecimal($statestotal2[$stValue]['allocation']) ?>
 							</strong></td>
 						<?php endif; ?>
 					</tr>

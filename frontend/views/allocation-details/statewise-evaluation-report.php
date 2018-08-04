@@ -18,20 +18,7 @@ use kartik\widgets\DepDrop;
 	$this->title = 'Report: Statewise Evaluation Report' ;
 	$this->params['breadcrumbs'][] = $this->title;
 	$yearData = ReportQueryManager::getActivitiesListData()['years'];
-
-	/*//prepare data for hidden field year-id
-	if(sizeof($yearData)>0):
-		$yearKeys = array_keys($yearData);
-		$yearVals = array_values($yearData);
-		$yk =  Json::encode($yearKeys);
-		$yv =  Json::encode($yearVals);
-	else:
-		$yearData[0]='';
-		$yearKeys[0]='';
-		$yearVals[0]='';
-		$yk =  Json::encode($yearKeys);
-		$yv =  Json::encode($yearVals);
-	endif;*/
+	
 ?>
 
 <div class="questionnaire-index">

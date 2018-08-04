@@ -51,14 +51,13 @@ use yii\helpers\ArrayHelper;
 <div class="questionnaire-index">
 	
 	<div class= "panel panel-info">
-
 		<div class='panel-heading' align='center'>
 			<h3><?= $this->title ?></h3>
 		</div>
 		
 		<div class="panel-body">
 				<div class='well well-sm'>
-					NOTE: Please Generate Allocations from <a href='/que-summary/index' target='_blank' style='color:green'>Reports->Generate Allocations</a> before 
+					NOTE: Please Generate Allocations from <span class='bg-success'> <a href='/que-summary/index' target='_blank' style='color:green'>Reports->Generate Allocations</a></span> before 
 					generating report for latest data.
 			   </div>
 			  <hr/>
