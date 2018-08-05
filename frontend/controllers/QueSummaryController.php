@@ -6,6 +6,7 @@ use frontend\models\QueSummary;
 use yii\mongodb\Query;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 
 
 use Yii;
@@ -42,7 +43,7 @@ class QueSummaryController extends \yii\web\Controller
          /*return  $this->renderAjax('gen-sum-status',['response'=>$response]); *///not used as it is slower than renderPartial.
          return $this->renderPartial('gen-sum-status',['response'=>$response]);
     	else:
-    		throw new \yii\web\BadRequestHttpException;
+    		throw new BadRequestHttpException;
     	endif;
     }
 
@@ -75,7 +76,7 @@ class QueSummaryController extends \yii\web\Controller
            /*return  $this->renderAjax('gen-sum-status',['response'=>$response]); *///not used as it is slower than renderPartial.
            return $this->renderPartial('_ajax-activities-at-a-glance',['response'=>$response]);
     	else:
-    	 throw new \yii\web\BadRequestHttpException;
+    	 throw new BadRequestHttpException;
     	endif;
     }
 
@@ -93,7 +94,7 @@ class QueSummaryController extends \yii\web\Controller
       if((strlen($post['refYear'])>0 && strlen($post['refCentre'])>0)):
           $model= self::getActivitiesReportModel();
       else:
-        throw new \yii\web\BadRequestHttpException('Both year and centre should be selected for generating pdf');
+        throw new BadRequestHttpException('Both year and centre should be selected for generating pdf');
       endif;
       $response = \Yii::$app->response;
 
@@ -172,7 +173,7 @@ class QueSummaryController extends \yii\web\Controller
             $response->statusCode = 200;
            return $this->renderPartial('_ajax-monthwise-alphabetical-marksheet',['response'=>$response]);
         else:
-         throw new \yii\web\BadRequestHttpException;
+         throw new BadRequestHttpException;
         endif;
     }
 
@@ -212,7 +213,7 @@ class QueSummaryController extends \yii\web\Controller
       if(strlen($post['refYear'])>0):
           $model=self::getMonthwiseReportModel();
       else:
-        throw new \yii\web\BadRequestHttpException('Year should be selected for generating pdf');
+        throw new BadRequestHttpException('Year should be selected for generating pdf');
       endif;
 
      $response = \Yii::$app->response;
@@ -257,7 +258,7 @@ class QueSummaryController extends \yii\web\Controller
             $response->statusCode = 200;
            return $this->renderPartial('_ajax-punctuality-statement',['response'=>$response]);
         else:
-         throw new \yii\web\BadRequestHttpException;
+         throw new BadRequestHttpException;
         endif;
     }
 
@@ -296,7 +297,7 @@ class QueSummaryController extends \yii\web\Controller
       if(strlen($post['refYear'])>0):
           $model=self::getPunctualityReportModel();
       else:
-        throw new \yii\web\BadRequestHttpException('Year should be selected for generating pdf');
+        throw new BadRequestHttpException('Year should be selected for generating pdf');
       endif;
      $response = \Yii::$app->response;
 

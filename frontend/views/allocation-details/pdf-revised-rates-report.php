@@ -31,8 +31,8 @@ if (class_exists('yii\debug\Module'))
                     <?php foreach ($models as $model): ?>
                         <th class='text-right'>
                             Rates approved by:
-                            <?= $model->approvedBy ?>
-                            on <?= $model->approvalDate ?><br/>
+                            <?= $model['approvedBy']?>
+                            on <?= $model['approvalDate'] ?><br/>
                             (Amount in Rupees)
                         </th>
                     <?php endforeach; ?>
@@ -56,11 +56,11 @@ if (class_exists('yii\debug\Module'))
     </div>
     <div align='right'>
         <br/>
-        Rates approved by Mukhya Swamiji,
+        Rates approved by <?= \yii::$app->params['headOfMissionTitle'] ?>,
         <br/>
         <br/>
         <br/>
-        Swami Swaroopananda
+        <?= \Yii::$app->params['currentHeadOfMission'] ?>
     </div>
 </div>               
 

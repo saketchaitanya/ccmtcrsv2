@@ -56,7 +56,7 @@ use kartik\widgets\DepDrop;
 ?>
 <div class="questionnaire-index">
 	
-	<div class= "panel panel-info">
+	<div class= "panel panel-info card">
 
 		<div class='panel-heading' align='center'>
 			<h3><?= $this->title ?></h3>
@@ -64,7 +64,7 @@ use kartik\widgets\DepDrop;
 		
 		<div class="panel-body">
 				<div class='well well-sm'>
-					NOTE: Please Generate Questionnaire Summary from <a href='/que-summary/index' target='_blank' style='color:green'>Reports->Generate Report Data</a> before 
+					NOTE: Please Generate Questionnaire Summary from <span class='bg-success'><a href='/que-summary/index' target='_blank' style='color:green'>Reports->Generate Report Data</a></span> before 
 					generating report for latest data.
 			   </div>
 			  <hr/>
@@ -73,12 +73,10 @@ use kartik\widgets\DepDrop;
 				action='que-summary/fetch-activitiesataglance' method='post' target="_blank">
 					<div class='col-xs-12, col-md-3'>
 				   		<?php
-				           // echo '<label class="control-label">Year</label>';
 				            echo Select2::widget([
 				            'name' => 'refYear',
 				            'id'=> 'year-select',
 				            'data' => $yearData,
-				            //'initValueText'=>$defaultDates,
 				            'options' => 
 					            [
 					              	'placeholder' => 'Select Year ..',
@@ -97,7 +95,6 @@ use kartik\widgets\DepDrop;
 						 		[
 						 			'type'=>2,
 									'name' => 'refCentre',
-									//'data' => [$defaultCentreID=>$defaultCentre],
 									'options' => 
 									[
 						            	'id'=> 'centre-select',
@@ -128,8 +125,8 @@ use kartik\widgets\DepDrop;
 			</div>
 			<hr/>
 			<div align='center'><h4><u> Report Details</u></h4></div>
-					<div id='loader' align='center' style='display:none'><img src= '<?php echo Yii::$app->urlManager->createAbsoluteUrl("/themes/material-COC/assets/images/ajax-loader2.gif") ?>' height='30' width='30'/> </div>
-					<div id='rep-content'></div>
+				<div id='loader' align='center' style='display:none'><img src= '<?php echo Yii::$app->urlManager->createAbsoluteUrl("/themes/material-COC/assets/images/ajax-loader2.gif") ?>' height='30' width='30'/> </div>
+				<div id='rep-content'></div>
 			</div>
 	</div>
 	
@@ -246,3 +243,8 @@ JSRegister::begin(
 
     </script>
 <?php JSRegister::end(); ?>
+<?php $this->registerCss(" 
+						  thead, tfoot { background-color: #F5F5F5; font-weight:bold;}
+						  thead {border-top:2px solid gray}
+						  tfoot {border-bottom:2px solid gray; border-top:2px double gray}
+						");	?>

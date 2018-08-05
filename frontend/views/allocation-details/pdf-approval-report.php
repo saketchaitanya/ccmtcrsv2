@@ -127,7 +127,18 @@
 			</tbody>	
 		</table>
 	</div><!-- last div -->
+	<br/><br/>
 	
+		<div>
+			Signature of Approval:<br/>
+			(Regional Head)
+		</div>
+		<br/>
+		<div>
+		For CCMT:<br/>
+		( <?= \Yii::$app->params['SigningAuthority'] ?> )
+		</div>
+	</div>
 	<?php
 	else:
 		$string = "<div class='alert alert-danger' role='alert'>

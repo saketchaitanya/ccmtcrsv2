@@ -6,6 +6,8 @@ return [
     'evalAssistantEmail'=>'admin@chinmayamission.com',
     'SigningAuthority'=>'Swamini Nischalananda',
     'itAdminEmail' => 'saket@chinmayamission.com',
+    'headOfMissionTitle'=>'Mukhya Swamiji',
+    'currentHeadOfMission'=>'Swami Swaroopananda',
     'user.passwordResetTokenExpire' => 3600,
     
     //this is for rupee symbol with kartik\money\MaskMoney 

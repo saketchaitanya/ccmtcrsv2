@@ -15,12 +15,12 @@ use kartik\widgets\DepDrop;
 	
 	
 
-	$this->title = 'Summary Report' ;
+	$this->title = 'Report: Summary Report' ;
 	$this->params['breadcrumbs'][] = $this->title;
 	$yearData = ReportQueryManager::getActivitiesListData()['years'];
 
 	//prepare data for hidden field year-id
-	if(sizeof($yearData)>0):
+	/*if(sizeof($yearData)>0):
 		$yearKeys = array_keys($yearData);
 		$yearVals = array_values($yearData);
 		$yk =  Json::encode($yearKeys);
@@ -31,19 +31,19 @@ use kartik\widgets\DepDrop;
 		$yearVals[0]='';
 		$yk =  Json::encode($yearKeys);
 		$yv =  Json::encode($yearVals);
-	endif;
+	endif;*/
 ?>
 
 <div class="questionnaire-index">
 	
-	<div class= "panel panel-default">
+	<div class= "panel panel-info card">
 		<div class='panel-heading' align='center'>
 			<h3><?= $this->title ?></h3>
 		</div>
 		
 		<div class="panel-body">
 			<div class='well well-sm'>
-				NOTE: Please Generate Allocations from <a href='/que-summary/index' target='_blank' style='color:green'>Reports->Generate Allocations</a> before 
+				NOTE: Please Generate Allocations from <span class='bg-success'><a href='/que-summary/index' target='_blank' style='color:green'>Reports->Generate Allocations</a></span> before 
 				generating report for latest data.
 		   	</div>
 		  	<hr />
@@ -82,16 +82,33 @@ use kartik\widgets\DepDrop;
 			</form>
 		</div>
 		<hr/>
-		<div align='center'><h4><u> Report Details</u></h4></div>
-			<div id='loader' align='center' style='display:none'><img src= '<?php echo Yii::$app->urlManager->createAbsoluteUrl("/themes/material-COC/assets/images/ajax-loader2.gif") ?>' height='30' width='30'/> </div>
-			<div id='rep-content'></div>
+		<div class='panel-body'>
+			<div align='center'><h4><u> Report Details</u></h4></div>
+				<div id='loader' align='center' style='display:none'><img src= '<?php echo Yii::$app->urlManager->createAbsoluteUrl("/themes/material-COC/assets/images/ajax-loader2.gif") ?>' height='30' width='30'/> </div>
+				<div id='rep-content'></div>
+		</div>
 	</div>
 </div>
 	
 <script>
 	function send()
 		 {
+		   //validate
+		 	validate();
+			function validate()
+			{
+				var yearselect = $("#year-select").val();
+				if (yearselect=='')
+				{
+					alert('Selecting Year is mandatory');
+				    $('#select2-year-select-container').focus();
+				    throw new Error('Selecting Year is mandatory');
+			    }
+			}
+			//display loader
 		   $('#loader').show();
+
+		   //fetch ajax data
 		   var data=$('#summary-report-form').serialize();
 
 		  $.ajax({
@@ -133,7 +150,7 @@ use kartik\widgets\DepDrop;
 <?php
 
 //Javascript for adding to document.ready here
-JSRegister::begin(
+/*JSRegister::begin(
 		[
             'key' => 'group-id-handler',
             'position' => \yii\web\View::POS_READY
@@ -156,12 +173,12 @@ JSRegister::begin(
                 	var id =  key[i];
                 	$("#year-id").attr("value",id);
             	}
-            
+            	
         	}
     	});
 
     </script>
-<?php JSRegister::end(); ?>
+<?php JSRegister::end();*/ ?>
 <?php $this->registerCss(" 
 						  thead, tfoot { background-color: #F5F5F5; font-weight:bold;}
 						  thead {border-top:2px solid gray}

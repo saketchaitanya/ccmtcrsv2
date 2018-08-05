@@ -435,7 +435,7 @@ class ReportQueryManager
 			$quesCentres[]=$ques['centreID'];					
 		}
 
-		$reminders=array();
+		$reminders=array();    
     	$yearObj = CurrentYear::findOne(['_id'=>$yearId]);
     	$stDateTS = strtotime($yearObj->yearStartDate);
     	$endDateTS = strtotime($yearObj->yearEndDate);

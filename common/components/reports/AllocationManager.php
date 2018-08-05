@@ -358,11 +358,46 @@ class AllocationManager
 			}
 			return $res;
 	}
+
+	/**
+	 * Used for creating input data for dropdowns in approval-report-regional-heads.php
+	 */
+	public static function approvalReportInputData()
+	{
+		$q = new Query();
+		$rows = $q->select(['yearId','region','_id'=>false])->from('allocationDetails')->all();
+		$yearIds=array_unique(ArrayHelper::getColumn($rows,'yearId'));
+		$yearArr = array();
+		foreach ($yearIds as $yearId)
+		{
+			$yearId = \common\models\CurrentYear::findOne(['_id'=>$yearId]);
+			$stYear = $yearId->yearStartDate;
+			$endYear = $yearId->yearEndDate;
+			$dates = $stYear.' to '.$endYear;
+			$arr =['id'=>(string)$yearId->_id, 'dates'=>$dates];
+			$yearArr[]=$arr;
+		}
+		$years=array_unique($yearArr,SORT_REGULAR);
+		$yearData = ArrayHelper::map($years,'id','dates');
+	
+		$regions=array_values(
+					array_unique(
+						ArrayHelper::getColumn($rows,'region')
+					)
+				);
+		$regionData = array();
+		for ($i=0; $i<sizeof($regions); $i++)
+		{
+			$regMaster = \common\models\RegionMaster::findOne(['regionCode'=>$regions[$i]]);
+			$regionData[$regions[$i]]= $regMaster['name'];
+		}
+		return ['yearData'=>$yearData,'regionData'=> $regionData];
+	}
 /* --- revised rates report ----- */
 
 	public static function getRevisedRatesData()
 	{
-		 $allocs = AllocationMaster::find()
+		$allocs = AllocationMaster::find()
 	 				->where(
 		 				[
 		 					'status'=>
@@ -371,38 +406,43 @@ class AllocationManager
 	 							AllocationMaster::STATUS_INACTIVE
 	 						]
 	 					])
-		 			->orderBy('displaySeq',SORT_ASC)
+		 			->asArray()
 		 			->all();
+
+		$allocAsc = array();
+		foreach ($allocs as $alloc):
+			$alloc['approvalDateTS']= strtotime($alloc['approvalDate']);
+			$allocAsc[]=$alloc;
+		endforeach;	
 		
+		ArrayHelper::multisort($allocAsc, ['approvalDateTS'], [SORT_ASC]);
 		
 		$activeAlloc = AllocationMaster::findOne(['status'=> AllocationMaster::STATUS_ACTIVE]);
-	 	
 	 	$rangeArray = $activeAlloc->rangeArray;
-
 	 	ArrayHelper::multisort($rangeArray, ['srNo'], [SORT_ASC]);
-
 	 	$stMarks = ArrayHelper::getColumn($rangeArray,'startMarks');
+	 	
 	 	$marksRange = array();
 	 	$rates = array();
 	 	for($i=0; $i<sizeof($stMarks); $i++)
 	 	{
 	 		$marksRange[$i]=$rangeArray[$i]['startMarks'] . '-' . $rangeArray[$i]['endMarks'];
 	 		$j = 0;
-	 		foreach ($allocs as $alloc)
+	 		foreach ($allocAsc as $alloc)
 	 		{
-	 			$rArr = $alloc->rangeArray;
+	 			$rArr = $alloc['rangeArray'];
 	 			$sm=ArrayHelper::map($rArr,'startMarks','Rates');
 	 			if (array_key_exists($stMarks[$i],$sm)):
 	 				$rates[$i][$j]=(int)$sm[$stMarks[$i]];
 	 			else:
-	 			$rates[$i][$j]=0;
+	 				$rates[$i][$j]=0;
 	 			endif;	
 	 			$j++;
 	 		}
 
 	 	}				
 		return [
-					'models'=>$allocs, 
+					'models'=>$allocAsc, 
 					'startMarks'=>$stMarks,
 					'marks'=>$marksRange, 
 					'rates'=>$rates

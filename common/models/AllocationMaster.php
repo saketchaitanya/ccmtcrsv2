@@ -46,7 +46,7 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
             'approvedBy',
             'approvalDate',
             'status',
-            'displaySeq',
+            //'displaySeq',
             'created_at',
             'updated_at',
             'created_by',
@@ -82,8 +82,8 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
                 ],
             ['status','default','value'=>self::STATUS_NEW],
             ['approvalDate','date','format'=>'php:d-m-Y'],
-            ['displaySeq','integer','min'=>0],
-            ['displaySeq','default','value'=>0]
+            /*['displaySeq','integer','min'=>0],
+            ['displaySeq','default','value'=>0]*/
         ];
     }
 
@@ -99,7 +99,7 @@ class AllocationMaster extends \yii\mongodb\ActiveRecord
             'activeDate' => 'Active Date',
             'approvedBy' => 'Approved By',
             'approvalDate' => 'Approval Date',
-            'displaySeq'=>'Display Sequence',
+            //'displaySeq'=>'Display Sequence',
             'status' => 'Status',
         ];
     }

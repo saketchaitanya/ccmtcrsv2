@@ -360,7 +360,6 @@ class AllocationDetailsController extends Controller
           $response->data = self::getRegionalheadreportModel();
 
           //  $response->format = \yii\web\Response::FORMAT_JSON;
-            //$response->data = $res;
             $response->statusCode = 200;
            return $this->renderPartial('_ajax-approval-report',['response'=>$response]);
          else:

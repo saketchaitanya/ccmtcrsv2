@@ -23,7 +23,7 @@ use kartik\widgets\DepDrop;
 
 <div class="questionnaire-index">
 	
-	<div class= "panel panel-info">
+	<div class= "panel panel-info card">
 		<div class='panel-heading' align='center'>
 			<h3><?= $this->title ?></h3>
 		</div>
@@ -87,10 +87,12 @@ use kartik\widgets\DepDrop;
 			</form>
 		</div>
 		<hr/>
-		<div align='center'><h4><u> Report Details</u></h4></div>
-			<div id='loader' align='center' style='display:none'><img src= '<?php echo Yii::$app->urlManager->createAbsoluteUrl("/themes/material-COC/assets/images/ajax-loader2.gif") ?>' height='30' width='30'/> </div>
-			<div id='rep-content'></div>
-	</div>
+		<div class='panel-body'>
+			<div align='center'><h4><u> Report Details</u></h4></div>
+				<div id='loader' align='center' style='display:none'><img src= '<?php echo Yii::$app->urlManager->createAbsoluteUrl("/themes/material-COC/assets/images/ajax-loader2.gif") ?>' height='30' width='30'/> </div>
+				<div id='rep-content'></div>
+			</div>
+		</div>
 </div>
 	
 <script>

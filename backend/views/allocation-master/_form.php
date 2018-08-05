@@ -67,7 +67,7 @@ $acharyaList = AcharyaHelper::allAcharyaSelect2Input();
                 ],
             ]);
 	?>
-	<?= $form->field($model,'displaySeq')->widget(TouchSpin::class,
+	<?php /*echo $form->field($model,'displaySeq')->widget(TouchSpin::class,
 		[
 			'options' => 
             [
@@ -79,7 +79,7 @@ $acharyaList = AcharyaHelper::allAcharyaSelect2Input();
                 'step'=> 1,
                 'max' => 100,
 			]
-		]);
+		]);*/
 	?>
    <div class='well'>
 	<?= $form->field($model, 'rangeArray')->widget(MultipleInput::className(),[

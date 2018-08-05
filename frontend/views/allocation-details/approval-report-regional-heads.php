@@ -1,7 +1,5 @@
 <?php
 
-use common\components\reports\ReportQueryManager;
-use common\components\DropdownListHelper;
 use \yii\bootstrap\Html;
 use \yii\bootstrap\Alert;
 use \yii\helpers\Url;
@@ -12,45 +10,24 @@ use richardfan\widget\JSRegister;
 use yii\mongodb\Query;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
+use common\components\reports\AllocationManager;
+use common\components\reports\ReportQueryManager;
+use common\components\DropdownListHelper;
 
 /* @var $this yii\web\View */
 	
 	$this->title = 'Report: For Approval by Regional Heads' ;
 	$this->params['breadcrumbs'][] = $this->title;
 
-	$q = new Query();
-	$rows = $q->select(['yearId','region','_id'=>false])->from('allocationDetails')->all();
-	$yearIds=array_unique(ArrayHelper::getColumn($rows,'yearId'));
-	$yearArr = array();
-		foreach ($yearIds as $yearId)
-		{
-			$yearId = \common\models\CurrentYear::findOne(['_id'=>$yearId]);
-			$stYear = $yearId->yearStartDate;
-			$endYear = $yearId->yearEndDate;
-			$dates = $stYear.' to '.$endYear;
-			$arr =['id'=>(string)$yearId->_id, 'dates'=>$dates];
-			$yearArr[]=$arr;
-		}
-		$years=array_unique($yearArr,SORT_REGULAR);
-		$yearData = ArrayHelper::map($years,'id','dates');
-	
-	$regions=array_values(
-					array_unique(
-						ArrayHelper::getColumn($rows,'region')
-					)
-				);
-	$regionData = array();
-	for ($i=0; $i<sizeof($regions); $i++)
-	{
-		$regMaster = \common\models\RegionMaster::findOne(['regionCode'=>$regions[$i]]);
-		$regionData[$regions[$i]]= $regMaster['name'];
-	}
-
+	//prepare dropdown data
+	$data = AllocationManager::approvalReportInputData();
+ 	$yearData = $data['yearData'];
+ 	$regionData = $data['regionData'];
 
 ?>
 <div class="questionnaire-index">
 	
-	<div class= "panel panel-info">
+	<div class= "panel panel-info card">
 		<div class='panel-heading' align='center'>
 			<h3><?= $this->title ?></h3>
 		</div>
@@ -139,9 +116,11 @@ use yii\helpers\ArrayHelper;
 				</form>
 			</div>
 			<hr/>
-			<div align='center'><h4><u> Report Details</u></h4></div>
-					<div id='loader' align='center' style='display:none'><img src= '<?php echo Yii::$app->urlManager->createAbsoluteUrl("/themes/material-COC/assets/images/ajax-loader2.gif") ?>' height='30' width='30'/> </div>
-					<div id='rep-content'></div>
+			<div class='panel-body'>
+				<div align='center'><h4><u> Report Details</u></h4></div>
+						<div id='loader' align='center' style='display:none'><img src= '<?php echo Yii::$app->urlManager->createAbsoluteUrl("/themes/material-COC/assets/images/ajax-loader2.gif") ?>' height='30' width='30'/> </div>
+						<div id='rep-content'></div>
+				</div>
 			</div>
 	</div>
 	

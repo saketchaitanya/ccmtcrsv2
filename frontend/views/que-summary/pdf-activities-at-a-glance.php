@@ -53,7 +53,7 @@
 					<th> Gyana Yagnas & camps<br/>(Nos)</th>
 					<th> Festivals and Pujas<br/>(Nos)</th>
 					<th> Other Prachar works<br/>(Nos)</th>
-					<th> Seva Works</th><th> Publication Sale ( ₹ )</th>
+					<th> Seva Works</th><th> Publication Sale (Rupees)</th>
 					<th> Any Other Info</th>
 				</tr>
 			</thead>

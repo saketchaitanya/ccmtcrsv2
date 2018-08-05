@@ -11,7 +11,7 @@ $this->title = 'Report Data Generator' ;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="questionnaire-index">
-<div class= "panel panel-default">
+<div class= "panel panel-info card">
 
 	<div class='panel-heading' align='center'>
 		<h3> Report Data Generator Panel</h3>
@@ -19,7 +19,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="panel-body">
 		<div class='row'>
 			<div class='col-xs-12, col-md-6'>
-				<div class="panel panel-success">
+				<div class='card-container'>
+					<div class="panel panel-success card">
 					<div class="panel-heading">
 						Generate Questionnaire Summary
 					</div>
@@ -48,37 +49,40 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?php ActiveForm::end(); ?>
 					</div>
    				</div>
+   				</div>
 	   		</div>
    			<div class='col-xs-12 col-md-6'>
-   				<div class="panel panel-success">
-					<div class="panel-heading">
-						Generate Allocations
-					</div>
-					<div class="panel-body" style='min-height:200px'>
-					    <?php
-						$form = ActiveForm::begin(
-								[
-				                	'options' => 
-				                	[
-				                    	'id' => 'allocation-form'
-				                	]
-				    			]);
-				    	?>
-				   	
-	  		 			<?php 
-	  				 	echo Html::button(
-	  		 			'Generate Allocations', 
-	  		 			[
-	  		 				'value' => Url::to(['allocation-details/generate-allocations']), 
-	  		 				'title' => 'Generating Allocations', 
-	  		 				'class' => 'loadAllocContent btn btn-success'
-	  		 			]); 
-	 					?>
-	 					<div><br/> Message will be displayed below<br/> </div>
-						<div id='alloc-content'></div>
-						<?php ActiveForm::end(); ?>
-					</div>
-   				</div>
+   				
+	   				<div class="panel panel-success card">
+						<div class="panel-heading">
+							Generate Allocations
+						</div>
+						<div class="panel-body" style='min-height:200px'>
+						    <?php
+							$form = ActiveForm::begin(
+									[
+					                	'options' => 
+					                	[
+					                    	'id' => 'allocation-form'
+					                	]
+					    			]);
+					    	?>
+					   	
+		  		 			<?php 
+		  				 	echo Html::button(
+		  		 			'Generate Allocations', 
+		  		 			[
+		  		 				'value' => Url::to(['allocation-details/generate-allocations']), 
+		  		 				'title' => 'Generating Allocations', 
+		  		 				'class' => 'loadAllocContent btn btn-success'
+		  		 			]); 
+		 					?>
+		 					<div><br/> Message will be displayed below<br/> </div>
+							<div id='alloc-content'></div>
+							<?php ActiveForm::end(); ?>
+						</div>
+	   				</div>
+   				
    			</div>
 	
 </div>

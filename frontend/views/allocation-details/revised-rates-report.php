@@ -9,8 +9,9 @@
     $rates = $res['rates'];
     $startMarks = $res['startMarks'];
     $marks = $res['marks'];
+   
 ?>
-<div class= 'panel panel-info'>
+<div class= 'panel panel-info card'>
     <div class = 'panel-heading'>
         <h3>Revised rates for evaluation of questionnaire reports </h3>
         
@@ -32,8 +33,8 @@
                                 <?php foreach ($models as $model): ?>
                                     <th class='text-right'>
                                         Rates approved by:
-                                        <?= $model->approvedBy ?>
-                                        on <?= $model->approvalDate ?>
+                                        <?= $model['approvedBy'] ?>
+                                        on <?= $model['approvalDate'] ?>
                                         (Amount in ₹)
                                     </th>
                                 <?php endforeach; ?>

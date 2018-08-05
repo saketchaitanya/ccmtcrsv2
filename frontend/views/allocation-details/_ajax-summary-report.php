@@ -41,7 +41,7 @@
 					</td>
 					<td>Grand Total ( <?= $gCodeString ?> )
 					</td>
-					<td  align='right'><?= $grandTotal ?>
+					<td  align='right'><?= \yii::$app->formatter->asCurrency($grandTotal) ?>
 					</td>
 				</tr>
 			</tfoot>
@@ -53,17 +53,17 @@
 						 <tr>
 							<td> <?= $m['centrecount'] ?> </td>
 							<td> <?= $m['name'] ?> </td>
-							<td align='right'> <?= $m['amount']  ?> </td>
+							<td align='right'> <?= \yii::$app->formatter->asCurrency($m['amount'])  ?> </td>
 						</tr>
 						<?php endif; ?>
 					<?php endforeach; ?>
-					<tr style='font-weight:bold' >
+					<tr style='font-weight:bold' class='bg-warning' >
 						<td> <?= $regions[$key]['totalCentres'] ?>
 						</td>
 						<td >
 							(<?= $value['groupCode'] ?>)-TOTAL CENTRES &emsp;REGIONAL (<?= strtoupper($regions[$key]['region']) ?>)
 						</td>
-						<td style='text-align:right'><?= $regions[$key]['subtotal'] ?>
+						<td style='text-align:right'><?= \yii::$app->formatter->asCurrency($regions[$key]['subtotal']) ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
