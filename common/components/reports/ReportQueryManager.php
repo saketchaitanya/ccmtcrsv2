@@ -18,18 +18,17 @@ class ReportQueryManager
 	 *  which have been submitted, approved or closed
 	 *  @param MongoId $centreId
 	 */
-	public static function validQuesData($centreId = null)
+	public static function validQuesData($centreId = null,$allYears=false)
 	{
-	 	
-		$startYear = self::currentYear()['startdate'];
-		$endYear =  self::currentYear()['enddate'];	
+	 	if($allYears==false):
+			$startYear = self::currentYear()['startdate'];
+			$endYear =  self::currentYear()['enddate'];	
 
-		$startDateTS = date_create($startYear,timezone_open('Asia/Kolkata'));
-		$stDate = (int)date_format(date_modify($startDateTS,"-1 month"),'U');
-		$endDateTS = date_create($endYear,timezone_open('Asia/Kolkata'));
-		$endDate = (int)date_format(date_modify($endDateTS,"+1 day"),'U');
-		
-		$Query =  Questionnaire::find()
+			$startDateTS = date_create($startYear,timezone_open('Asia/Kolkata'));
+			$stDate = (int)date_format(date_modify($startDateTS,"-1 month"),'U');
+			$endDateTS = date_create($endYear,timezone_open('Asia/Kolkata'));
+			$endDate = (int)date_format(date_modify($endDateTS,"+1 day"),'U');
+			$Query =  Questionnaire::find()
 	 					 ->where (['between','forDateTS',$stDate,$endDate])
 	 					 ->andWhere([
 	 					 				'in','status',
@@ -40,6 +39,19 @@ class ReportQueryManager
 											//Questionnaire::STATUS_REWORK,
 										]
 									]);
+	 	else:
+	 		$Query =  Questionnaire::find()
+	 					 ->where([
+	 					 				'in','status',
+										[
+											Questionnaire::STATUS_APPROVED,
+											Questionnaire::STATUS_CLOSED,
+											Questionnaire::STATUS_SUBMITTED,
+											//Questionnaire::STATUS_REWORK,
+										]
+									]);
+
+	 	endif;
 		if(!is_null($centreId)):
 	 		$QuestionArray = 
 	 			$Query
@@ -99,8 +111,8 @@ class ReportQueryManager
 
 		$centrename = ucwords(strtolower($centre->name));
 		$fileNo = isset($centre->fileNo)? $centre->fileNo:'';
-		$compNo = isset($centre->CMCNo)? $centre->CMCNo:'';
-		
+		$compNo = isset($centre->code)? $centre->code:'';
+		$CMCNo = isset($centre->CMCNo)? $centre->CMCNo:'';
 		
 		if($centre->isCentreRegistered == true):
 			$iscentreregistered = 'yes';
@@ -118,6 +130,7 @@ class ReportQueryManager
 					'centreAdd'=>$centreadd,
 					'fileNo'=>$fileNo,
 					'compNo'=>$compNo,
+					'CMCNo'=>$CMCNo,
 					'centreOwnsPlace'=>$centreownsplace,
 					'regNo'=>$regNo,
 					'regDate'=>$regDate,
@@ -221,7 +234,7 @@ class ReportQueryManager
 	 */
 	public static function getActivitiesListData()
 	{
-		$ques = self::validQuesData();
+		$ques = self::validQuesData(null,true);
 		$queIDs = ArrayHelper::getColumn($ques,'queID');
 		$quesum = QueSummary::find()->where(['in','summID',$queIDs])->asArray()->all();
 		$yearIds = ArrayHelper::getColumn($quesum,'yearID');
@@ -412,6 +425,38 @@ class ReportQueryManager
 		return $res;
 	}
 /*  ----------------------------------- */ 
+/* --- Evaluation at a glance ----*/
+
+
+	public static function getEvalData($centreId)
+	{
+		//get all years data from summary table
+		$summ = QueSummary::find()
+        ->where(['centreID'=>$centreId])
+        ->orderBy(['forDateTS',SORT_DESC])
+        ->asArray()
+        ->all();
+        $allocations = Allocations::find()
+        ->where(['centreID'=>$centreId])
+        ->orderBy(['forDateTS',SORT_DESC])
+        ->asArray()
+        ->all();
+        \yii::$app->yiidump->dump($summ);
+        $summByYear = ArrayHelper::index($summ,'forDateTS');
+        ksort($summByYear);
+        $yearIDs = array_unique(ArrayHelper::getColumn($summByYear,'yearID'));
+        $foryear = [];
+        foreach($yearIDs as $yearID):
+			$year = \common\models\CurrentYear::findOne(['_id'=>$yearID]);
+      		$startDate = $year->yearStartDate;
+  			$endDate = $year->yearEndDate;
+      		$forYear[] = substr($startDate,-4).' - '.substr($endDate,-4);
+    	endforeach;
+        $marksInfo = ArrayHelper::map($summ,'forDateTS','marks');
+
+
+        return ['years'=>$forYear,'marksInfo'=>$marksInfo,  ];
+	}
 
 /* --- Monthwise Alphabetical Marksheet --- */
 	

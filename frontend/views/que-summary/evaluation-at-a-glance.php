@@ -15,9 +15,9 @@ use kartik\widgets\DepDrop;
 	
 	
 
-	$this->title = 'Report: Activities at a Glance' ;
+	$this->title = 'Report: Questionnaire Evaluation at a Glance' ;
 	$this->params['breadcrumbs'][] = $this->title;
-	$yearData = ReportQueryManager::getActivitiesListData()['years'];
+	/*$yearData = ReportQueryManager::getActivitiesListData()['years'];
 
 	//prepare data for hidden field year-id
 	if(sizeof($yearData)>0):
@@ -31,7 +31,7 @@ use kartik\widgets\DepDrop;
 		$yearVals[0]='';
 		$yk =  Json::encode($yearKeys);
 		$yv =  Json::encode($yearVals);
-	endif;
+	endif;*/
 
 	//prepare data for hidden field centre-id
 	$centreData = ReportQueryManager::getActivitiesListData()['centres'];
@@ -50,8 +50,8 @@ use kartik\widgets\DepDrop;
 
 	$defaultCentre= ReportQueryManager::getActivitiesListData()['defaultCentre'];
 	$defaultCentreID=ReportQueryManager::getActivitiesListData()['defaultCentreID'];
-	$defaultYear = ReportQueryManager::getActivitiesListData()['defaultYear'];
-	$defaultDates = ReportQueryManager::getActivitiesListData()['defaultDates'];
+	/*$defaultYear = ReportQueryManager::getActivitiesListData()['defaultYear'];
+	$defaultDates = ReportQueryManager::getActivitiesListData()['defaultDates'];*/
 
 ?>
 <div class="questionnaire-index">
@@ -69,46 +69,26 @@ use kartik\widgets\DepDrop;
 			   </div>
 			  <hr/>
 			<div class='row'>
-				<form id='activities-at-a-glance-form' name='activities-at-a-glance-form' 
-				action='que-summary/fetch-activitiesataglance' method='post' target="_blank">
-					<div class='col-xs-12, col-md-3'>
+				<form id='evaluation-at-a-glance-form' name='evaluation-at-a-glance-form' 
+				action='que-summary/fetch-evaluationataglance' method='post' target="_blank">
+					<div class='col-xs-12, col-md-8'>
 				   		<?php
 				            echo Select2::widget([
-				            'name' => 'refYear',
-				            'id'=> 'year-select',
-				            'data' => $yearData,
+				            'name' => 'refCentre',
+				            'id'=> 'centre-select',
+				            'data' => $centreData,
 				            'options' => 
 					            [
-					              	'placeholder' => 'Select Year ..',
+					              	'placeholder' => 'Select A Centre ..',
 					                'multiple' => false
 				        		],
 			        		]);
 			        	?>
-			   			<?php echo Html::hiddenInput('yearId', $defaultYear,['id'=>'year-id']); ?>
+			   			<?php echo Html::hiddenInput('centreId', $defaultCentreID,['id'=>'centre-id']);?>
 					</div>
 					<input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>"
            				value="<?=Yii::$app->request->csrfToken?>"/>
-					<div class='col-xs-12, col-md-5'>
-						<?php			  	
-						 	echo   
-						 		DepDrop::widget(
-						 		[
-						 			'type'=>2,
-									'name' => 'refCentre',
-									'options' => 
-									[
-						            	'id'=> 'centre-select',
-									],
-									'pluginOptions' => 
-									[
-										'placeholder' => 'Select Centre ..',
-										'depends'=>['year-select'],
-										'url'=>Url::to(['/que-summary/centre-list'])
-									]
-								]);
-					 	?> 
-			 			<?php echo Html::hiddenInput('centreId', $defaultCentreID,['id'=>'centre-id']);?>
-			    	</div>
+					
 			   		<div class='col-xs-6, col-md-2'>
 						<?php 
 		 					echo Html::Button('Generate Report',
@@ -119,7 +99,7 @@ use kartik\widgets\DepDrop;
 		 								]);?>
 		 		    </div>
 		 			<div class='col-xs-6, col-md-2'>		
-					 	<button type="submit" class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('que-summary/generatepdf')?>" >GeneratePdf</button>
+					 	<button type="submit" class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('que-summary/pdf-evaluationataglance')?>" >GeneratePdf</button>
 					</div>
 				</form>
 			</div>
@@ -138,14 +118,8 @@ use kartik\widgets\DepDrop;
 			validate();
 			function validate()
 			{
-				var yearselect = $("#year-select").val();
 				var centreselect = $("#centre-select").val();
-				if (yearselect=='')
-				{
-					alert('Selecting Year is mandatory');
-				    $('#select2-year-select-container').focus();
-				    throw new Error('Selecting Year is mandatory');
-			    }
+				
 				if (centreselect=='')
 				{	
 					alert('Selecting Centre is mandatory');
@@ -158,10 +132,10 @@ use kartik\widgets\DepDrop;
 		   $('#loader').show();
 
 		   //execute ajax
-		   var data=$("#activities-at-a-glance-form").serialize();
+		   var data=$("#evaluation-at-a-glance-form").serialize();
 		  $.ajax({
 		   	type: 'POST',
-		    url: '<?php echo Yii::$app->urlManager->createAbsoluteUrl("que-summary/fetch-activitiesataglance"); ?>',
+		    url: '<?php echo Yii::$app->urlManager->createAbsoluteUrl("que-summary/fetch-evaluationataglance"); ?>',
 		   	data:data,
 			success:function(data){
 		                $('#rep-content').html(data);
@@ -191,7 +165,7 @@ use kartik\widgets\DepDrop;
 			    	});
 				});",
 		\yii\web\View::POS_END,
-		'activitiesataglance-handler'
+		'evaluationataglance-handler'
 	);
 ?>
 
@@ -200,33 +174,15 @@ use kartik\widgets\DepDrop;
 //Javascript for adding to document.ready here
 JSRegister::begin(
 		[
-            'key' => 'group-id-handler',
+            'key' => 'eval-id-handler',
             'position' => \yii\web\View::POS_READY
         ]); 
     ?>
     <script>
-        var key = <?php echo $yk; ?>;
-        var sec = <?php echo $yv; ?>;
 
         var key1 = <?php echo $ck; ?>;
         var sec1 = <?php echo $cv; ?>;
    
-       $("#year-select").change(
-        function(e) 
-        { 
-          var selectval = this.options[e.target.selectedIndex].text;
-         	for(i=0;i<key.length;i++)
-        	{
-            	desc = sec[i];
-            	if(selectval == desc)
-            	{
-                	var id =  key[i];
-                	$("#year-id").attr("value",id);
-            	}
-            
-        	}
-    	});
-   	
     	  $('#centre-select').on('change', function() {
       		var selectval = $("#centre-select option:selected").text();
       		 for(i=0;i<key.length;i++)

@@ -7,8 +7,6 @@
 
 	$data = $response->data;
 	$model=$data['summary'];
-	$lit = $data['literature'];
-	$vidya = $data['vidyalaya'];
 	$centreInfo = $data['centreInfo'];
 
 
@@ -39,21 +37,22 @@
 		<table class='table table-bordered'>
 			<thead>
 				<tr>
-					<th> For Month</th>
-					<th> Recieved On</th>
-					<th> Mission members<br/>(Nos)</th>
-					<th> Balvihar<br/>(Nos)</th>
-					<th> Yuvakendra<br/>(Nos)</th>
-					<th> Study Groups<br/>(Nos)</th>
-					<th> Devi Groups<br/>(Nos)</th>
-					<th> Other Classes<br/>(Nos)</th>
-					<th> Chinmaya Vanaprasthas<br/>(Nos)</th>
-					<th> Acharya Classes <br/>(Nos)</th>
-					<th> Gyana Yagnas & camps<br/>(Nos)</th>
-					<th> Festivals and Pujas<br/>(Nos)</th>
-					<th> Other Prachar works<br/>(Nos)</th>
-					<th> Seva Works</th><th> Publication Sale ( ₹ )</th>
-					<th> Any Other Info</th>
+					<th> For Year</th>
+					<th> Apr</th>
+					<th> May</th>
+					<th> Jun</th>
+					<th> Jul</th>
+					<th> Aug</th>
+					<th> Sep</th>
+					<th> Oct</th>
+					<th> Nov</th>
+					<th> Dec</th>
+					<th> Jan</th>
+					<th> Feb</th>
+					<th> Mar</th>
+					<th> Total</th>
+					<th> Amount Alloted</th>
+					<th> Date of Payment</th>
 				</tr>
 			</thead>
 	<?php 
