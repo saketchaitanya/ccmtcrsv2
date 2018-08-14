@@ -145,7 +145,84 @@ class QueSummaryController extends \yii\web\Controller
 
     }
 
+    /*------------- evaluation at a glance report ---------*/
+    /**
+     * Displays evaluation at a glance base query form
+     */
+    public function actionEvaluationataglance()
+    {
+      return $this->render('evaluation-at-a-glance');
+    }
     
+
+    /**
+     *  Generates ajax report data for evaluation at a glance and populates the view
+     */
+    public function actionFetchEvaluationataglance()
+    {
+      $model=self::getEvaluationReportModel();
+
+      if (\Yii::$app->request->isAjax):
+      $response = \Yii::$app->response;
+          //  $response->format = \yii\web\Response::FORMAT_JSON;
+            $response->data = $model;
+            $response->statusCode = 200;
+           /*return  $this->renderAjax('gen-sum-status',['response'=>$response]); *///not used as it is slower than renderPartial.
+           return $this->renderPartial('_ajax-evaluation-at-a-glance',['response'=>$response]);
+      else:
+       throw new BadRequestHttpException;
+      endif;
+    }
+
+     
+
+  /**
+   * generates PDF report for evaluation at  a glance report 
+   */
+
+    public function actionEvaluationataglancePdf() 
+   {
+
+      $post =\Yii::$app->request->post();
+      // get your HTML raw content without any layouts or scripts
+      if(strlen($post['refCentre'])>0):
+          $model= self::getEvaluationReportModel();
+      else:
+        throw new BadRequestHttpException('Year should be selected for generating pdf');
+      endif;
+      $response = \Yii::$app->response;
+
+      $response->format = \yii\web\Response::FORMAT_RAW;
+      $response->data = serialize($model);
+      $response->statusCode = 200;
+          
+      $content = $this->renderPartial(
+                'pdf-evaluation-at-a-glance',[
+                        'response' => $response,
+                    ]);
+        //generates a pdf in the browser window
+      $pdf = Yii::$app->pdf->generatePdf($content,null,'Evaluation at a glance','|Page {PAGENO}|'.' '.\Yii::$app->name.':'.date("d-M-Y:h:i a"),['orientation'=>\kartik\mpdf\Pdf::ORIENT_LANDSCAPE]);
+    }
+
+   /*
+     * Generates data based on post values for activities-at-a-glance report
+     */
+    private static function getEvaluationReportModel()
+    {
+      $post = \Yii::$app->request->post();
+      $centreId= (int)$post['refCentre'];
+      $summ = ReportQueryManager::getEvalData($centreId);
+      $centreInfo = ReportQueryManager::getCentreInfo($centreId);
+      $model = 
+      [
+              'summary'=>$summ,
+              'centreInfo'=>$centreInfo,
+        ];
+
+      return $model;
+
+    }
+
    /* ---------------- monthwise alphabetical marksheet ------------*/
    
     /**

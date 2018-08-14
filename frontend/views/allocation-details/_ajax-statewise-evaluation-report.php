@@ -75,7 +75,7 @@
 						<td></td>
 						<td align='right'><strong><?= \Yii::$app->formatter->asCurrency($value['allocation']) ?></strong></td>
 						<?if(isset($year2)): ?>
-							<td align='right'><strong><?= \Yii::$app->formatter->asCurrency($totalStates2[$stkey]['allocation']) ?></strong></td>
+							<td align='right'><strong><?= isset($totalStates2[$stkey]['allocation'])?\Yii::$app->formatter->asCurrency($totalStates2[$stkey]['allocation']):'' ?></strong></td>
 						<?php endif; ?>
 						<td></td>
 					</tr>

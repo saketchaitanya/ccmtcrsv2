@@ -92,7 +92,7 @@ class AllocationDetailsController extends Controller
 
             $wpLoc = WpLocation::findOne(['id'=>$model->wpLocCode]);
                     $model->name = $wpLoc->name;
-                    
+            $model->wpLocCode =(int)$wpLoc->id;        
             $year = CurrentYear::getCurrentYear();
             $model->yearId =(string) $year->_id;
             $yearstring =substr($year->yearStartDate,-4).substr($year->yearEndDate,-4);

@@ -77,15 +77,16 @@ use kartik\widgets\DepDrop;
 				            'name' => 'refCentre',
 				            'id'=> 'centre-select',
 				            'data' => $centreData,
-				            'options' => 
+				            'theme'=>Select2::THEME_KRAJEE,
+				            'options' => 		
 					            [
 					              	'placeholder' => 'Select A Centre ..',
 					                'multiple' => false
 				        		],
 			        		]);
 			        	?>
+			        </div>
 			   			<?php echo Html::hiddenInput('centreId', $defaultCentreID,['id'=>'centre-id']);?>
-					</div>
 					<input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>"
            				value="<?=Yii::$app->request->csrfToken?>"/>
 					
@@ -99,7 +100,7 @@ use kartik\widgets\DepDrop;
 		 								]);?>
 		 		    </div>
 		 			<div class='col-xs-6, col-md-2'>		
-					 	<button type="submit" class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('que-summary/pdf-evaluationataglance')?>" >GeneratePdf</button>
+					 	<button type="submit" class='btn btn-info' formaction="<?php echo Yii::$app->urlManager->createAbsoluteUrl('que-summary/evaluationataglance-pdf')?>" >GeneratePdf</button>
 					</div>
 				</form>
 			</div>

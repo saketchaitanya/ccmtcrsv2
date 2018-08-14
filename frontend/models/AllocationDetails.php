@@ -5,6 +5,9 @@ namespace frontend\models;
 use Yii;
 use yii\mongodb\Query;
 use common\models\WpLocation;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use common\components\behaviors\UnameBlameableBehavior;
 
 
 /**
@@ -59,10 +62,26 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
             'paymentDate',
             'remarks',
             'type',
-            'status'
+            'status',
+            'created_at',
+            'updated_at',
+            'created_uname',
+            'updated_uname',
+            'created_by',
+            'updated_by',
         ];
     }
 
+    public function behaviors()
+    {
+        return [
+                 TimestampBehavior::className(),
+                 BlameableBehavior::className(),
+                 UnameBlameableBehavior::className(),
+                 //AttributeTypecastBehavior::className(),
+                
+            ];
+    }
     /**
      * @inheritdoc
      */
@@ -149,7 +168,14 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
                   ->all();
        
         
-        $extCentres = \yii\helpers\ArrayHelper::map($centres,'id','name');
+        $extCentres = \yii\helpers\ArrayHelper::map($centres,
+          'id','name');
+
+        /*array_walk($extCentres,function(&$value,&$key){
+
+          $key = (int)$key;
+          return $key;
+        });*/
         return $extCentres;
 
     }

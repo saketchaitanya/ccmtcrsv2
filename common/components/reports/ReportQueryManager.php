@@ -5,6 +5,7 @@ use yii\mongodb\Query;
 use frontend\models\Questionnaire;
 use yii\helpers\ArrayHelper;
 use frontend\models\QueSummary;
+use frontend\models\AllocationDetails;
 use common\models\CurrentYear;
 use common\models\Centres;
 use frontend\models\GrpLiterary;
@@ -16,7 +17,10 @@ class ReportQueryManager
 	/**
 	 * This gives the details of questionnaires for a centre /all centres for the current year.
 	 *  which have been submitted, approved or closed
-	 *  @param MongoId $centreId
+	 *  @param boolean $allyears: If true, data will be fetched for all the years for which
+	 *  questionaires have been sent. If false, only questionnaires for current year will be fetched
+	 *  @param MongoId $centreId: If null, all centres data will be fetched 
+	 *  
 	 */
 	public static function validQuesData($centreId = null,$allYears=false)
 	{
@@ -431,31 +435,53 @@ class ReportQueryManager
 	public static function getEvalData($centreId)
 	{
 		//get all years data from summary table
-		$summ = QueSummary::find()
+		$q = new Query();
+		$summ = $q->select([
+							'forMonth',
+							'yearID',
+							'marks',
+							'forDateTS',
+							'centreID',
+							'_id'=>false])
+		->from('queSummary')
         ->where(['centreID'=>$centreId])
         ->orderBy(['forDateTS',SORT_DESC])
-        ->asArray()
         ->all();
-        $allocations = Allocations::find()
-        ->where(['centreID'=>$centreId])
-        ->orderBy(['forDateTS',SORT_DESC])
-        ->asArray()
-        ->all();
-        \yii::$app->yiidump->dump($summ);
+       
         $summByYear = ArrayHelper::index($summ,'forDateTS');
         ksort($summByYear);
         $yearIDs = array_unique(ArrayHelper::getColumn($summByYear,'yearID'));
+        
+        //create the year strings as yyyy-yyyy for the years
         $foryear = [];
         foreach($yearIDs as $yearID):
 			$year = \common\models\CurrentYear::findOne(['_id'=>$yearID]);
       		$startDate = $year->yearStartDate;
   			$endDate = $year->yearEndDate;
-      		$forYear[] = substr($startDate,-4).' - '.substr($endDate,-4);
+  			$yr = array();
+      		$yr['yearString'] = substr($startDate,-4).'-'.substr($endDate,-4);
+      		$yr['yearId'] = $yearID;
+      		$forYear[]=$yr;
     	endforeach;
-        $marksInfo = ArrayHelper::map($summ,'forDateTS','marks');
 
 
-        return ['years'=>$forYear,'marksInfo'=>$marksInfo,  ];
+    	//get allocations for the centre for the fetched years
+    	 $allocations = AllocationDetails::find()
+        ->where(['wpLocCode'=>(int)$centreId])
+        ->andWhere(['in','yearId',$yearIDs])
+        ->orderBy(['forDateTS',SORT_DESC])
+        ->asArray()
+        ->all();
+        foreach($summ as &$sum):
+        	$dateTS = $sum['forDateTS'];
+        	$mon=date('M', $dateTS);
+        	$sum['month']=$mon;
+        endforeach;
+
+       $allocYearWise = ArrayHelper::index($allocations,null,'yearId');
+       $summYearWise = ArrayHelper::index($summ,null,'yearID');
+       $forYearYearWise = ArrayHelper::index($forYear,null,'yearId');
+        return ['years'=>$forYearYearWise,'queSummary'=>$summYearWise, 'allocations'=>$allocYearWise];
 	}
 
 /* --- Monthwise Alphabetical Marksheet --- */

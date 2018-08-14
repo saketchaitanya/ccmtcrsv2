@@ -184,6 +184,10 @@
                                     'label'=>'Activities at a glance', 'url' =>['/que-summary/activitiesataglance']
                                   ],
                                     '<li class="divider"></li>',
+                                  [ 
+                                    'label'=>'Evaluation at a glance', 'url' =>['/que-summary/evaluationataglance']
+                                  ],
+                                    '<li class="divider"></li>',
   	                          		[ 
   	                          			'label'=>'Monthwise Marksheet', 'url' =>['/que-summary/monthwisemarksheet']
   	                          		],

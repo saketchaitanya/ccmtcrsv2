@@ -39,7 +39,7 @@ class AllocationManager
 		foreach($centreData as $key=>$value):
 			
 			$model = new AllocationDetails();
-			$model->wpLocCode = $key;
+			$model->wpLocCode = (int)$key;
 			$model->region = $value['region'];
 			$model->stateCode =$value['stateCode'];
 			$model->code = $value['code'];

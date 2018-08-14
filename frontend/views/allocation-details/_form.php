@@ -28,43 +28,53 @@ use kartik\widgets\DatePicker;
     <div class="panel-heading"> <h3><?= Html::encode(ucwords(strtolower($this->title))) ?></h3></div>
     <div class="panel-body">
         <div class="allocation-details-form">
+
             <?php $form = ActiveForm::begin(['id'=>$formName]); ?>
-
-            <?php echo $form->field($model, 'wpLocCode')->widget(Select2::classname(), 
-                [
-                    'data' => $centrelist,
-                    'options' => ['placeholder' => 'Select a centre Name ...'],
-                    'pluginOptions' => [
-                    'allowClear' => true
-                    ],
-                ])->label('Centre Name');
-            ?>
-            <?php echo $form->field($model,'region')->widget(Select2::class,
-                [
-                    'name' => 'Region',
-                    'data' => $regmap,
-                    'options' => [
-                        'placeholder' => 'Select region ...',
-                        'multiple' => false,
-                    ],
-                    'pluginOptions' => [
-                        'label'=>'Region',
-                        'allowClear' => true,
-                    ],
-                ]) ?>
-            <?= $form->field($model,'stateCode')->widget(Select2::class,[
-                    'name' => 'State Code',
-                    'data' => $stateCodeMap,
-                    'options' => [
-                        'placeholder' => 'Select code ...',
-                        'multiple' => false,
-                    ],
-                    'pluginOptions' => [
-                        'label'=>'State Code',
-                        'allowClear' => true,
-                    ],
+                <?if (!isset($action)): ?>
+                <?php 
+                    echo $form->field($model, 'wpLocCode')->widget(Select2::classname(), 
+                    [
+                        'data' => $centrelist,
+                        'options' => ['placeholder' => 'Select a centre Name ...'],
+                        'pluginOptions' => [
+                        'allowClear' => true
+                        ],
+                    ])->label('Centre Name');
+                ?>
+                <?php 
+                    echo $form->field($model,'region')->widget(Select2::class,
+                    [
+                        'name' => 'Region',
+                        'data' => $regmap,
+                        'options' => [
+                            'placeholder' => 'Select region ...',
+                            'multiple' => false,
+                        ],
+                        'pluginOptions' => [
+                            'label'=>'Region',
+                            'allowClear' => true,
+                        ],
                     ]) ?>
+                <?= $form->field($model,'stateCode')->widget(Select2::class,[
+                        'name' => 'State Code',
+                        'data' => $stateCodeMap,
+                        'options' => [
+                            'placeholder' => 'Select code ...',
+                            'multiple' => false,
+                        ],
+                        'pluginOptions' => [
+                            'label'=>'State Code',
+                            'allowClear' => true,
+                        ],
+                        ]) 
+                ?>
+                <?php else: ?>
+                    <?php echo $form->field($model, 'wpLocCode')->textInput(['readonly'=>true]);
+                ?>
+                <?php echo $form->field($model,'region')->textInput(['readonly'=>true])?>
+                <?= $form->field($model,'stateCode')->textInput(['readonly'=>true])?>
 
+                <?php endif; ?>
             <?= $form->field($model, 'code') ?>
             <?= $form->field($model, 'CMCNo') ?>
             <?= $form->field($model, 'fileNo') ?>
