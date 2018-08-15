@@ -12,7 +12,10 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <?php if(Yii::$app->session->hasFlash('resetsuccess')):
+            ?>
+            <div style='color:red'>Please click the password reset link sent to your registered email address to set your new password.</div>
+    <?php endif; ?>        
     <p>Please fill out the following fields to login:</p>
 
     <div class="row">

@@ -7,7 +7,9 @@
 <div class='container'>
 	    <div class="header row">
 	    	<div class='headercell'>
+	    		<h2><?= Yii::$app->name ?> </h2>
 		    	<?php 
+
 		    		if(isset($sender))
 		    		{
 		    			$curruser=$sender;
@@ -40,4 +42,4 @@
     	</div>
     	<div class='main row'>
     		<div class='cell'>
-    			<div style='background-color:#D2E1F2; font-size:16px; min-height:400px'>
+    			<div class='cell-content'>

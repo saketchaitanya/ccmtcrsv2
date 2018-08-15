@@ -23,7 +23,7 @@ class PasswordResetRequestForm extends Model
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
             ['email', 'email'],
-            ['email', function($attribute,$params,$validator){
+            /*['email', function($attribute,$params,$validator){
               
                  $model = \common\models\User::find()
                         ->where(['email' => $this->email])
@@ -32,10 +32,16 @@ class PasswordResetRequestForm extends Model
                 if (!isset($model)||($model->status==0)) 
                 {
                      $this->addError($attribute, 'There is no active user with such email.');
-                }  
+                }
+
             }
+            ],*/
+            ['email','exist',
+                'targetClass' => '\common\models\User',
+                'filter' => ['status' => User::STATUS_ACTIVE],
+                'message' => 'There is no user with this email address.'
             ],
-               
+
         ];
     }
 

@@ -1,7 +1,7 @@
 <?php
 return [
-    'adminEmail' => 'ccmtcrsadmin@chinmayamission.com',
-    'supportEmail' => 'ccmtcrssupport@chinmayamission.com',
+    'adminEmail' => 'admin@chinmayamission.com',
+    'supportEmail' => 'itsupport@chinmayamission.com',
     'evaluatorEmail'=> 'nishchalananda@chinmayamission.com',
     'evalAssistantEmail'=>'admin@chinmayamission.com',
     'SigningAuthority'=>'Swamini Nischalananda',

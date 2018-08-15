@@ -87,10 +87,10 @@ class UserController extends \yii\web\Controller
                 $message = $message.'<br/><br/>A query on questionnaire has been raised as under:</div>';
                 $message = $message.'<br/><br/><div style="width:100%" align="center">';
                 $message = $message.'<table width="100%">';
-                $message = $message.'<tr/><td>Sender Name</td><td>'.$sender.'</td></tr>';
-                $message = $message.'<tr/><td>Sender Email</td><td>'.$fromemail.'</td></tr>';
-                $message = $message.'<tr/><td>Sent using username</td><td>'.$username.'</td></tr>';
-                $message = $message.'<tr/><td>Query</td><td>'.$comment.'</td></tr>';
+                $message = $message.'<tr><td>Sender Name</td><td>'.$sender.'</td></tr>';
+                $message = $message.'<tr><td>Sender Email</td><td>'.$fromemail.'</td></tr>';
+                $message = $message.'<tr><td>Sent using username</td><td>'.$username.'</td></tr>';
+                $message = $message.'<tr><td>Query</td><td>'.$comment.'</td></tr>';
                 $message = $message.'</table></div>';
 
             //send mail
@@ -98,7 +98,8 @@ class UserController extends \yii\web\Controller
                         [
                             'from'  =>  $fromemail,
                             'sender'=>  $sender,
-                            'to'    =>  \Yii::$app->params['evaluatorEmail'],
+                            'to'    =>  \Yii::$app->params['evalAssistantEmail'],
+                            'cc'    =>  \Yii::$app->params['evaluatorEmail'],
                             'subject'=> 'Query from user:'.$sender, 
                             'title' =>  'Query on Questionnaire',
                             'content'=> $message,
