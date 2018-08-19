@@ -21,17 +21,15 @@
 	?>
 
 	<div> 
-		<table>
+		<table width="100%">
 			<tr>
-				<td width="70%" colspan="3">
+				<td  colspan="3">
 					<div>
 						<b>Centre Name:</b> <?php echo $centreInfo['centreName'] ?>
 					</div>
 					<div>
 						<b>Centre Address:</b> <br/><?php echo $centreInfo['centreAdd'] ?>
 					</div>
-				</td>
-				<td> &nbsp;
 				</td>
 				<td>
 					<div>
@@ -45,6 +43,7 @@
 					</div>
 				</td>
 			</tr>
+			
 		</table>	
 	</div>
 		
@@ -71,34 +70,68 @@
 			</thead>
 			<?php foreach($years as $year): ?>
 				<tr align='right'>
-					<td> 
-						<?= $year[0]['yearString'] ?> 
-					</td>
-						<?php 
-							$queSum = $queSummary[$year[0]['yearId']]; 
-					  		$alloc = $allocations[$year[0]['yearId']][0];
-						?>
-						<?php 
-							if(isset($queSum)):
+					<td> <?= $year['yearString'] ?> </td>
+					<?php 
+						$alloc = $allocations[$year['yearId']][0];
+						if(	$alloc['type']=='int' && sizeof($queSummary)>0) $queSum = $queSummary[$year['yearId']]; 
+					?>
+					<?php 
+						if(isset($queSum)):
 							$sum =ArrayHelper::index($queSum,'month');
-						?>
-							<td align='right'> <?php if(array_key_exists('Apr',$sum)) echo $sum['Apr']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('May',$sum)) echo $sum['May']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Jun',$sum)) echo $sum['Jun']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Jul',$sum)) echo $sum['Jul']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Aug',$sum)) echo $sum['Aug']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Sep',$sum)) echo $sum['Sep']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Oct',$sum)) echo $sum['Oct']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Nov',$sum)) echo $sum['Nov']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Dec',$sum)) echo $sum['Dec']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Jan',$sum)) echo $sum['Jan']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Feb',$sum)) echo $sum['Feb']['marks'] ?></td>
-							<td align='right'> <?php if(array_key_exists('Mar',$sum)) echo $sum['Mar']['marks'] ?></td>
-							<td align='right'><?php echo $alloc['marks'] ?></td>
-							<td align='right'><?php  if(isset($alloc['allocation'])) echo (int)$alloc['allocation'] ?></td>
-							<td><?php  if(isset($alloc['paymentDate'])) echo $alloc['paymentDate'] ?></td>
-						<?php endif; ?>
+					?>
+						<td align='right'> <?php if(array_key_exists('Apr',$sum)) echo $sum['Apr']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('May',$sum)) echo $sum['May']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Jun',$sum)) echo $sum['Jun']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Jul',$sum)) echo $sum['Jul']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Aug',$sum)) echo $sum['Aug']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Sep',$sum)) echo $sum['Sep']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Oct',$sum)) echo $sum['Oct']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Nov',$sum)) echo $sum['Nov']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Dec',$sum)) echo $sum['Dec']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Jan',$sum)) echo $sum['Jan']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Feb',$sum)) echo $sum['Feb']['marks'] ?></td>
+						<td align='right'> <?php if(array_key_exists('Mar',$sum)) echo $sum['Mar']['marks'] ?></td>
+						<td align='right'><?php echo $alloc['marks'] ?></td>
+						<td align='right'><?php  if(isset($alloc['allocation'])) echo $alloc['allocation'] ?></td>
+						<td align='right'><?php  if(isset($alloc['paymentDate'])) echo $alloc['paymentDate'] ?></td>
+
+						<?php elseif (isset($alloc['marksArray'])):
+							$marksArray = ArrayHelper::map($alloc['marksArray'],'month','marks');
+							?>
+						<td align='right'> <?php if(array_key_exists('Apr',$marksArray)) echo $marksArray['Apr']?></td>
+						<td align='right'> <?php if(array_key_exists('May',$marksArray)) echo $marksArray['May']?></td>
+						<td align='right'> <?php if(array_key_exists('Jun',$marksArray)) echo $marksArray['Jun']?></td>
+						<td align='right'> <?php if(array_key_exists('Jul',$marksArray)) echo $marksArray['Jul']?></td>
+						<td align='right'> <?php if(array_key_exists('Aug',$marksArray)) echo $marksArray['Aug']?></td>
+						<td align='right'> <?php if(array_key_exists('Sep',$marksArray)) echo $marksArray['Sep']?></td>
+						<td align='right'> <?php if(array_key_exists('Oct',$marksArray)) echo $marksArray['Oct']?></td>
+						<td align='right'> <?php if(array_key_exists('Nov',$marksArray)) echo $marksArray['Nov']?></td>
+						<td align='right'> <?php if(array_key_exists('Dec',$marksArray)) echo $marksArray['Dec']?></td>
+						<td align='right'> <?php if(array_key_exists('Jan',$marksArray)) echo $marksArray['Jan']?></td>
+						<td align='right'> <?php if(array_key_exists('Feb',$marksArray)) echo $marksArray['Feb']?></td>
+						<td align='right'> <?php if(array_key_exists('Mar',$marksArray)) echo $marksArray['Mar']?></td>
+						<td align='right'><?php echo $alloc['marks'] ?></td>
+						<td align='right'><?php  if(isset($alloc['allocation'])) echo $alloc['allocation'] ?></td>
+						<td align='right'><?php  if(isset($alloc['paymentDate'])) echo $alloc['paymentDate'] ?></td>	
+						<?php else:?>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td> </td>
+						<td align='right'><?php echo $alloc['marks'] ?></td>
+						<td align='right'><?php  if(isset($alloc['allocation'])) echo $alloc['allocation'] ?></td>
+						<td align='right'><?php  if(isset($alloc['paymentDate'])) echo $alloc['paymentDate'] ?></td>							
+					<?php endif; ?>
 				</tr>
+
 			<?php endforeach; ?>	
 		</table>
 			

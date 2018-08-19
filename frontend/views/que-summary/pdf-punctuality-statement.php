@@ -63,7 +63,7 @@
 				<?php endforeach; ?>
 			</tbody>	
 		</table>
-	Explanations: ns = not sent, <span style="color:red">Late</span> = submitted later than one month, Intime = punctual(sent within one month of the month for which it is filled)
+	Explanations: ns = not submitted, <span style="color:red">Late</span> = submitted later than one month, Intime = punctual(sent within one month of the month for which it is filled)
 
 	<?php
 	else:

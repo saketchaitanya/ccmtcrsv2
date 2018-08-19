@@ -85,7 +85,7 @@
 	</div><!-- last div -->
 	<hr>
 		<div>
-			<div class='col-xs-12 col-md-4'>
+			<div class='col-xs-12 col-md-6'>
 				<div style='margin:2px; border:1px solid #dcdcdc; min-height:150px;padding:5px'>
 					<div align='center'>
 						<strong>LITERARY ACTIVITIES</strong>
@@ -93,9 +93,10 @@
 					<div>Newsletter/Magazine: <?php echo $lit['haveNewsletter']; ?></div>
 					<div>Periodicity: <?php echo $lit['periodicity']; ?></div>
 					<div>Name: <?php echo $lit['name']; ?></div>
+					<div>Last Update Date:<?php echo $lit['updatedate']?></div>
 				</div>
 			</div>
-			<div class='col-xs-12 col-md-4'>
+			<div class='col-xs-12 col-md-6'>
 				<div style='margin:2px; border:1px solid #dcdcdc; min-height:150px; padding:5px'>
 					<div align='center'>
 						<strong>CHINMAYA VIDYALAYA</strong>
@@ -109,19 +110,7 @@
 					</div>
 				</div>
 			</div>
-			<div class='col-xs-12 col-md-4'>
-				<div style='margin:2px; border:1px solid #dcdcdc; min-height:150px;padding:5px'>
-					<div align='center'>
-						<strong>PROJECT/CENTRE ESTABLISHMENT</strong>
-					</div>
-					<div>
-							<div>Centre's own place: <?php echo $centreInfo['centreOwnsPlace'] ?></b></div>
-							<div>Is your centre registered?: <?php echo $centreInfo['isCentreRegistered'] ?></b></div>
-							<div>If Yes, Year of reg: <?php echo $centreInfo['regNo'] ?></div>
-							<div>Registration Date: <?php echo $centreInfo['regDate'] ?></b></div>
-					</div>
-				</div>
-			</div>
+			
 		</div>
 	<?php
 	else:

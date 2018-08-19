@@ -128,10 +128,8 @@ class AllocationManager
 	{
 		$year = CurrentYear::findOne(['id'=>$yearId]);
 
-		$allocs = AllocationDetails::find(['yearId'=>$yearId])->asArray()->all();
+		$allocs = AllocationDetails::find()->where(['yearId'=>$yearId])->asArray()->all();
 		$allocStates = ArrayHelper::index($allocs, null, 'stateCode');
-		
-
 		$data = array();
 		
 		foreach( $allocStates as $key=>$value):

@@ -17,7 +17,7 @@
 	<div style=' border:1px solid #dcdcdc; min-height:100px;padding:10px'> 
 		<table width='100%'>
 			<tr>
-				<td>
+				<td colspan='3'>
 					<div><b>Centre Name:</b> <?php echo $centreInfo['centreName'] ?>
 					</div>
 					<div><b>Centre Address:</b> <br/><?php echo $centreInfo['centreAdd'] ?>
@@ -86,43 +86,32 @@
 	</div><!-- last div -->
 	<hr>
 		<div>
-			<table width='100%'>
-			<tr>
-				<td>
-					<div align='center'>
-						<strong>LITERARY ACTIVITIES</strong>
-					</div>
-					<div>
+			<table width="100%">
+				<tr>
+					<th>
+						LITERARY ACTIVITIES
+					</th>
+					<th>
+						CHINMAYA VIDYALAYA
+					</th>
+				</tr>	
+				<tr>
+					<td>
 						<div>Newsletter/Magazine: <?php echo $lit['haveNewsletter']; ?></div>
 						<div>Periodicity: <?php echo $lit['periodicity']; ?></div>
 						<div>Name: <?php echo $lit['name']; ?></div>
-					</div>
-				</td>
-				<td>
-					<div align='center'>
-						<strong>CHINMAYA VIDYALAYA</strong>
-					</div>
-					<div>
+						<div>Last Update Date:<?php echo $lit['updatedate']?></div>
+						<div>&nbsp;</div>
+					</td>
+					<td>
 						<div>Balvihars in schools: <?php echo $vidya['balviharStatus'] ?></div>
 						<div>Number of classes: <?php echo $vidya['noOfClasses'] ?></div>
 						<div>Frequency of balvihars: <?php echo  $vidya['balviharFrequency'] ?></div>
 						<div>Is CVP implemented: <?php echo  $vidya['cvpImplemented'] ?></div>
 						<div>CVP Coverage: <?php echo $vidya['cvpCoverage'] ?></div>
-					</div>
-				</td>
-				<td>
-				 	<div align='center'>
-							<strong>PROJECT/CENTRE ESTABLISHMENT</strong>
-					</div>
-					<div>
-						<div>Centre's own place: <?php echo $centreInfo['centreOwnsPlace'] ?></b></div>
-						<div>Is your centre registered?: <?php echo $centreInfo['isCentreRegistered'] ?></b></div>
-						<div>If Yes, Year of reg: <?php echo $centreInfo['regNo'] ?></div>
-						<div>Registration Date: <?php echo $centreInfo['regDate'] ?></b></div>
-					</div>
-				</td>
-			</tr>
-			</table>
+					</td>
+				</tr>
+		</table>
 		</div>
 </div>
 	<?php

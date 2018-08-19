@@ -8,6 +8,7 @@ use frontend\models\QueSummary;
 use frontend\models\AllocationDetails;
 use common\models\CurrentYear;
 use common\models\Centres;
+use common\models\WpLocation;
 use frontend\models\GrpLiterary;
 use frontend\models\GrpVidyalaya;
 use common\components\CentresIndiaHelper;
@@ -99,6 +100,9 @@ class ReportQueryManager
 	{
 		
 		$centre = Centres::findOne(['wpLocCode'=>$centreId]);
+		if(is_null($centre))
+		$centre = WpLocation::findOne(['id'=>$centreId]);
+			
 		$cent = CentresIndiaHelper::wpCentreAddress($centre);
 
 		$centreadd = $cent['address1'].'<br/>';
@@ -118,7 +122,7 @@ class ReportQueryManager
 		$compNo = isset($centre->code)? $centre->code:'';
 		$CMCNo = isset($centre->CMCNo)? $centre->CMCNo:'';
 		
-		if($centre->isCentreRegistered == true):
+		if(isset($centre->isCentreRegistered) && $centre->isCentreRegistered == true):
 			$iscentreregistered = 'yes';
 			$regNo= isset($centre->regNo)? $centre->regNo:'';
 			$regDate = isset($centre->regDate)? $centre->regDate:'';
@@ -128,7 +132,7 @@ class ReportQueryManager
 			$regDate = '';
 		endif;
 		
-		$centreownsplace = ($centre->centreOwnsPlace == true)?'yes':'no';
+		$centreownsplace = isset($centre->isCentreRegistered)?(($centre->centreOwnsPlace == true)?'yes':'no'):'';
 		$res = [
 					'centreName'=>$centrename,
 					'centreAdd'=>$centreadd,
@@ -238,11 +242,15 @@ class ReportQueryManager
 	 */
 	public static function getActivitiesListData()
 	{
+	
+		//get internal data..
 		$ques = self::validQuesData(null,true);
 		$queIDs = ArrayHelper::getColumn($ques,'queID');
 		$quesum = QueSummary::find()->where(['in','summID',$queIDs])->asArray()->all();
 		$yearIds = ArrayHelper::getColumn($quesum,'yearID');
 		$centreIds = ArrayHelper::getColumn($ques,'centreID');
+
+		//get external data..
 
 		$centArray = array();
 		foreach ($centreIds as $id)
@@ -319,10 +327,13 @@ class ReportQueryManager
 			$res['name'] = $model->name;
 			$res['periodicity'] = $model->periodicity;
 			$res['haveNewsletter'] = $model->haveNewsletter;
+			$date = date('d-M-Y',(int)$model->updated_at);
+			$res['updatedate'] = $date;
 		else:
 			$res['name'] = null;
 			$res['periodicity'] = null;
 			$res['haveNewsletter'] = 'no';
+			$res['updatedate'] = '';
 
 		endif;	
 		return $res;
@@ -448,10 +459,18 @@ class ReportQueryManager
         ->orderBy(['forDateTS',SORT_DESC])
         ->all();
        
-        $summByYear = ArrayHelper::index($summ,'forDateTS');
+       //get allocations for the centre for the fetched years
+    	 $allocations = AllocationDetails::find()
+				        ->where(['wpLocCode'=>(int)$centreId])
+				        ->asArray()
+				        ->all();	
+
+        /*$summByYear = ArrayHelper::index($summ,'forDateTS');
         ksort($summByYear);
-        $yearIDs = array_unique(ArrayHelper::getColumn($summByYear,'yearID'));
-        
+        $yearIDs = array_unique(ArrayHelper::getColumn($summByYear,'yearID'));*/
+        $yearIDs = array_unique(ArrayHelper::getColumn($allocations,'yearId'));
+
+
         //create the year strings as yyyy-yyyy for the years
         $foryear = [];
         foreach($yearIDs as $yearID):
@@ -463,25 +482,44 @@ class ReportQueryManager
       		$yr['yearId'] = $yearID;
       		$forYear[]=$yr;
     	endforeach;
-
+    	$years = array();
+		foreach($foryear as $key=>$value):
+		$years[$key]=
+			[
+				'stYear'=>(int)substr($value[0]['yearString'],0,-5),
+				'yearString'=>$value[0]['yearString'],
+				'yearId'=>$value[0]['yearId'],
+			];
+		endforeach;
 
     	//get allocations for the centre for the fetched years
-    	 $allocations = AllocationDetails::find()
+    	/* $allocations = AllocationDetails::find()
         ->where(['wpLocCode'=>(int)$centreId])
         ->andWhere(['in','yearId',$yearIDs])
-        ->orderBy(['forDateTS',SORT_DESC])
         ->asArray()
-        ->all();
+        ->all();*/
+       
         foreach($summ as &$sum):
         	$dateTS = $sum['forDateTS'];
         	$mon=date('M', $dateTS);
         	$sum['month']=$mon;
         endforeach;
+        
+        $allocYearWise = ArrayHelper::index($allocations,null,'yearId');
+        $summYearWise = ArrayHelper::index($summ,null,'yearID');
+        $yearYearWise = ArrayHelper::index($forYear,null,'yearId');
+        $years = array();
+		foreach($yearYearWise as $key=>$value):
+		$years[$key]=
+			[
+				'stYear'=>(int)substr($value[0]['yearString'],0,-5),
+				'yearString'=>$value[0]['yearString'],
+				'yearId'=>$value[0]['yearId'],
+			];
+		endforeach;
+		ArrayHelper::multisort($years,['stYear'], [SORT_ASC]);
 
-       $allocYearWise = ArrayHelper::index($allocations,null,'yearId');
-       $summYearWise = ArrayHelper::index($summ,null,'yearID');
-       $forYearYearWise = ArrayHelper::index($forYear,null,'yearId');
-        return ['years'=>$forYearYearWise,'queSummary'=>$summYearWise, 'allocations'=>$allocYearWise];
+        return ['years'=>$years,'queSummary'=>$summYearWise, 'allocations'=>$allocYearWise];
 	}
 
 /* --- Monthwise Alphabetical Marksheet --- */

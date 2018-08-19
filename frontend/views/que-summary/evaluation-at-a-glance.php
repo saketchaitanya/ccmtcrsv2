@@ -1,5 +1,5 @@
 <?php
-
+use common\models\WpLocation;
 use common\components\reports\ReportQueryManager;
 use common\components\DropdownListHelper;
 use \yii\bootstrap\Html;
@@ -10,11 +10,12 @@ use kartik\widgets\Select2;
 use richardfan\widget\JSRegister;
 use yii\helpers\Json;
 use kartik\widgets\DepDrop;
+use yii\mongodb\Query;
+use yii\helpers\ArrayHelper;
+
 
 /* @var $this yii\web\View */
 	
-	
-
 	$this->title = 'Report: Questionnaire Evaluation at a Glance' ;
 	$this->params['breadcrumbs'][] = $this->title;
 	/*$yearData = ReportQueryManager::getActivitiesListData()['years'];
@@ -34,7 +35,12 @@ use kartik\widgets\DepDrop;
 	endif;*/
 
 	//prepare data for hidden field centre-id
-	$centreData = ReportQueryManager::getActivitiesListData()['centres'];
+	/*$centreData = ReportQueryManager::getActivitiesListData()['centres'];*/
+	$centreIds = (new Query())->select(['wpLocCode','id'=>false])->from('allocationDetails')->distinct('wpLocCode');
+	$centreInfo = WpLocation::findAll(['id'=>$centreIds]);
+
+	$centreData = ArrayHelper::map($centreInfo, 'id','name');
+
 	if(sizeof($centreData)>0):
 		$centreKeys = array_keys($centreData);
 		$centreVals = array_values($centreData);
