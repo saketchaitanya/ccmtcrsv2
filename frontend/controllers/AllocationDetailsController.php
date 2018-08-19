@@ -93,26 +93,33 @@ class AllocationDetailsController extends Controller
             $wpLoc = WpLocation::findOne(['id'=>$model->wpLocCode]);
                     $model->name = $wpLoc->name;
             $model->wpLocCode =(int)$wpLoc->id;        
-            $year = CurrentYear::getCurrentYear();
-            $model->yearId =(string) $year->_id;
+            
+            /*$model->yearId =(string) $year->_id;*/
+            if(isset($model->yearId)):
+            	$year = CurrentYear::findOne(['_id'=>$model->yearId]);
+           	else:
+           		$year = CurrentYear::getCurrentYear();
+           	endif;
             $yearstring =substr($year->yearStartDate,-4).substr($year->yearEndDate,-4);
             $model->allocationID = $model->wpLocCode.$yearstring;
             //$model->status = AllocationDetails::ALLOC_EXT;
-            
-            if($model->save()):
+            $this->redirect(['index']);
+           if($model->save()):
                 $message = 1;
             else:
                 $message = 'Failure.Record not created.';
+                throw new \yii\web\ServerErrorHttpException($message);
+
             endif;
             return $message;
         }
-        elseif (\yii::$app->request->isAjax)
+       /* elseif (\yii::$app->request->isAjax)
         {  
             return $this->renderAjax('create', [
                 'model' => $model,
             ]);
             //return $this->redirect(['view', 'id' => (string)$model->_id]);
-        }
+        }*/
         else
         {
             return $this->render('create', [
@@ -328,10 +335,10 @@ class AllocationDetailsController extends Controller
         throw new BadRequestHttpException('Year should be selected for generating pdf');
       endif;
 
-     $response = \Yii::$app->response;
-     $response->format = \yii\web\Response::FORMAT_RAW;
-     $response->data = json_encode($model);
-     $response->statusCode = 200;
+      $response = \Yii::$app->response;
+      $response->format = \yii\web\Response::FORMAT_RAW;
+      $response->data = json_encode($model);
+      $response->statusCode = 200;
           
       $contents = $this->renderPartial(
                 'pdf-summary-report',[

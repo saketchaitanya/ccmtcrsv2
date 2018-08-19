@@ -10,6 +10,8 @@ use common\models\CurrentYear;
 $this->title = $model->_id;
 $this->params['breadcrumbs'][] = ['label' => 'Current Years', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+
 ?>
 <div class="current-year-view">
 
@@ -23,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'yearEndDate',
             [
                 'attribute'=> 'exemptionArray',
-                'value'=>implode(', ',$model->exemptionArray),
+                'value'=>is_array($model->exemptionArray)? implode(", ",$model->exemptionArray):$model->exemptionArray,
                 'label'=>'Months exempted for Punctuality'
             ],
             'status',
@@ -33,6 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
     { ?>
          <p>
             <?= Html::a('Update', ['update', 'id' => (string)$model->_id], ['class' => 'btn btn-primary']) ?>
+        </p>
+    <?php 
+    }else
+    { ?>
+         <p>
+            <?= Html::a('Create', ['create'], ['class' => 'btn btn-success']) ?>
         </p>
     <?php 
     }?>

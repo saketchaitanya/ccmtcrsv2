@@ -1,12 +1,18 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
 use frontend\models\AllocationDetails;
+use yii\mongodb\Query;
 use common\models\RegionMaster;
+use common\models\CurrentYear;
 use kartik\widgets\DatePicker;
+use common\components\StatesHelper;
+use common\components\DropdownListHelper;
+use unclead\multipleinput\MultipleInput;
 
 
     /* @var $this yii\web\View */
@@ -15,13 +21,33 @@ use kartik\widgets\DatePicker;
 
     $centrelist = AllocationDetails::getExtCentres();
     $region = RegionMaster::findAll(['status'=>[RegionMaster::STATUS_ACTIVE,RegionMaster::STATUS_LOCKED]]); 
-    $regmap = \yii\helpers\ArrayHelper::map($region,'regionCode','name');
-    $stateCodeArr = \common\components\StatesHelper::getCodeStateArray(false);
+    $years = (new Query)
+                ->from('currentYear')
+                ->where(['status'=>[CurrentYear::STATUS_ACTIVE,CurrentYear::STATUS_INACTIVE]])
+                ->orderBy(['yearStartDate',SORT_ASC])
+                ->all(); 
+    ArrayHelper::multisort($years,function($item){
+                    return strtotime($item['yearStartDate']);
+                });
+    /*\yii::$app->yiidump->dump($years);*/
+    $yearlist = array();
+    foreach ($years as $year):
+        $yr= substr($year['yearStartDate'],-4).' - '.substr($year['yearEndDate'],-4);
+        $yearlist[(string)$year['_id']]= $yr;
+    endforeach;
+
+    $mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    $monthMap= DropdownListHelper::createInputKeyval($mons);
+
+    $regmap = ArrayHelper::map($region,'regionCode','name');
+    $stateCodeArr = StatesHelper::getCodeStateArray(false);
     $stateCodeMap = array();
     foreach ($stateCodeArr as $key=>$value):
         $stateCodeMap[$value]=$key.' - '.$value;
     endforeach;
     $formName = 'create-allocation-form-ext';
+    /*$data = $model->marksArray;
+    $datalen = sizeof($data);*/
 ?>
 
 <div class="panel panel-default" style="margin:20px 20px">
@@ -31,6 +57,16 @@ use kartik\widgets\DatePicker;
 
             <?php $form = ActiveForm::begin(['id'=>$formName]); ?>
                 <?if (!isset($action)): ?>
+                <?php 
+                    echo $form->field($model, 'yearId')->widget(Select2::classname(), 
+                    [
+                        'data' => $yearlist,
+                        'options' => ['placeholder' => 'Select the year for entry ...'],
+                        'pluginOptions' => [
+                        'allowClear' => true
+                        ],
+                    ])->label('Year');
+                ?>
                 <?php 
                     echo $form->field($model, 'wpLocCode')->widget(Select2::classname(), 
                     [
@@ -78,6 +114,108 @@ use kartik\widgets\DatePicker;
             <?= $form->field($model, 'code') ?>
             <?= $form->field($model, 'CMCNo') ?>
             <?= $form->field($model, 'fileNo') ?>
+             <?= $form->field($model, 'marksArray')
+                             ->widget(MultipleInput::className(),
+                                [
+                                    //'rendererClass' => \unclead\multipleinput\renderers\ListRenderer::className(),
+                                    'max'=>10,
+                                    'min'=>1,
+                                    //'cloneButton'=>true,
+                                    'addButtonOptions' => [
+                                        'class' => 'btn btn-info btn-sm',
+                                        'label' => '+' // also you can use html code
+                                ],
+                                'removeButtonOptions' => [
+                                    'class' => 'btn btn-danger btn-sm',
+                                    'label' => 'x'
+                                ],
+                                'columns'=>
+                                [
+                                    [      
+                                     'name' => 'month',
+                                     'type'=>Select2::class,
+                                     'items'=>$monthMap,
+                                     'options' => 
+                                        [
+                                             
+                                             'data' => $monthMap,
+                                             'options'=>[
+                                                'placeholder' => 'Select month ...',
+                                                    'multiple' => false,
+                                                ],
+                                             'pluginOptions' => 
+                                             [
+                                                  'label'=>'Month',
+                                                  'allowClear' => false,
+                                             ],
+                                        ],
+                                    ],
+                                    [ 
+                                        'name'=>'marks',
+                                        'title'=>'Marks',
+                                        'type'=>TouchSpin::class, 
+                                        'defaultValue'=> 1,
+                                            'options'=>
+                                            [
+                                                'pluginOptions'=>
+                                                    [
+                                                        'initval' => 1,
+                                                        'min' => 1,
+                                                        'max' => 100,
+                                                        'boostat' => 20,
+                                                        'maxboostedstep' => 10,
+                                                    ],
+                                                /*'pluginEvents'=>
+                                                [
+                                                    "touchspin.on.startupspin"=> 
+                                                        "function()
+                                                        {
+                                                            arraylen = ".  $datalen .";
+                                                            var i;
+                                                            var mks=0;
+                                                            for (i=0; i<arraylen; i++)
+                                                            {
+                                                                var name = 'allocationdetails-marksarray-'+i+'-marks';
+                                                                mks = mks+ Number($('#'+name).val());
+
+                                                            }
+
+                                                            if (mks>100)
+                                                            {
+                                                                mks = 100;
+                                                            }
+                                                            $('#allocationdetails-marks').val(mks);
+                                                        }",
+
+                                                    "touchspin.on.startdownspin"=> 
+                                                        "function()
+                                                        {
+                                                            arraylen = ".  $datalen .";
+                                                            var i;
+                                                            var mks=0;
+                                                            for (i=0; i<arraylen; i++)
+                                                            {
+                                                                var name = 'allocationdetails-marksarray-'+i+'-marks';
+                                                                mks = mks + Number($('#'+name).val());
+
+                                                            } 
+                                                                if (mks>100)
+                                                            {
+                                                                mks = 100;
+                                                            }
+                                                            $('#allocationdetails-marks').val(mks);
+
+                                                        }",
+
+                                                ]*/
+
+                                            ],
+                                    ],                                   
+                                ],
+                            ])
+                            ->label(false); ?>
+
+
             <?= $form->field($model, 'marks') ?>
             <?php if($model->status !== AllocationDetails::STATUS_APPROVED): ?>
             <?= $form->field($model, 'allocation')->widget(TouchSpin::class, 
@@ -140,7 +278,7 @@ use kartik\widgets\DatePicker;
 
 <?php if(!isset($action)||strlen($action)==0): ?>
 
-<?php $script = <<< JS
+<?php /*$script = <<< JS
 $('form#{$formName}').on('beforeSubmit', function(e)
     {
         var \$form = $(this);
@@ -168,6 +306,6 @@ $('form#{$formName}').on('beforeSubmit', function(e)
     return false;
     });
 JS;
-$this->registerJS($script); ?>
+$this->registerJS($script);*/ ?>
 
 <?php endif; ?>

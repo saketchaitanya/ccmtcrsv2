@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use richardfan\widget\JSRegister;
+use common\models\CurrentYear;
 
 //use yii\widgets\Pjax;
 use frontend\models\AllocationDetails;
@@ -83,6 +84,15 @@ Modal::end();*/
                 ['class' => 'kartik\grid\SerialColumn'],
                 //'_id',
                 'name',
+                ['attribute'=>'yearId', 
+                        'value'=>function ($data, $key, $index, $widget) 
+                        { 
+                            $year = CurrentYear::findOne([$data->yearId]);
+                             $yr= substr($year['yearStartDate'],-4).' - '.substr($year['yearEndDate'],-4);
+                            return $yr;
+                        },
+                 'label'=>'Year',
+                ],
                 'wpLocCode',
                 'region',
                 'stateCode',
@@ -165,7 +175,7 @@ JSRegister::begin([
 ?>
 
 <script>
-    $('#createBtn').on('click', function(e)
+    /*$('#createBtn').on('click', function(e)
     {
         e.preventDefault();
         $('#allocmodal').modal('show').find('.modal-body').load($(this).attr('href'));
@@ -181,7 +191,7 @@ JSRegister::begin([
     $('#allocmodal').on('hidden.bs.modal', function () 
     {
         $(this).find('.modal-body').html('<div align="center"><img src= "<?php echo $loaderUrl ?>" height="30" width="30"/></div>').end();
-    });
+    });*/
 </script>
 
 <?php JSRegister::end(); ?>

@@ -4,7 +4,7 @@ return [
     'supportEmail' => 'itsupport@chinmayamission.com',
     'evaluatorEmail'=> 'nishchalananda@chinmayamission.com',
     'evalAssistantEmail'=>'admin@chinmayamission.com',
-    'SigningAuthority'=>'Swamini Nischalananda',
+    'SigningAuthority'=>'Swamini Nishchalananda',
     'itAdminEmail' => 'saket@chinmayamission.com',
     'headOfMissionTitle'=>'Mukhya Swamiji',
     'currentHeadOfMission'=>'Swami Swaroopananda',

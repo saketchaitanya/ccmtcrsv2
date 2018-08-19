@@ -26,6 +26,7 @@ use common\components\behaviors\UnameBlameableBehavior;
  * @property mixed $allocation
  * @property mixed $paymentDate
  * @property mixed $Remarks
+ * @property mixed $monthlyMarks
  */
 class AllocationDetails extends \yii\mongodb\ActiveRecord
 {
@@ -57,6 +58,7 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
             'CMCNo',
             'fileNo',
             'yearId',
+            'marksArray',
             'marks',
             'allocation',
             'paymentDate',
@@ -87,6 +89,8 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
      */
     public function rules()
     {
+      $year = \common\models\CurrentYear::getCurrentYear();
+      $yearId = (string)$year->_id;
         return 
         [
             [
@@ -98,6 +102,7 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
                     'CMCNo', 
                     'fileNo',  
                     'marks', 
+                    'marksArray',
                     'allocation', 
                     'paymentDate', 
                     'remarks',
@@ -106,6 +111,7 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
                  'safe'
              ],
              [['allocationID'],'unique'],
+             ['yearId','default','value'=>$yearId],
              [['wpLocCode','region','stateCode','marks'],'required'],
              [   
                 'status','in','range'=>[self::STATUS_NEW,self::STATUS_APPROVED,],
@@ -139,6 +145,7 @@ class AllocationDetails extends \yii\mongodb\ActiveRecord
             'fileNo' => 'File No',
             'yearId' => 'Year ID',
             'marks' => 'Marks',
+            'marksArray' => 'Monthly Marks',
             'allocation' => 'Allocation',
             'paymentDate' => 'Payment Date',
             'remarks' => 'Remarks',
